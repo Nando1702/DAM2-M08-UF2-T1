@@ -3,21 +3,19 @@
 
     <item
         android:id="@+id/item1"
-        android:title="1"
+        android:title="Llista"
         app:showAsAction="never" />
     <item
         android:id="@+id/item2"
-        android:checkable="true"
-        android:title="2"
+        android:title="Filtro 1"
         app:showAsAction="never" />
     <item
         android:id="@+id/item3"
-        android:checkable="true"
-        android:title="3"
+        android:title="Filtro 2"
         app:showAsAction="never" />
     <item
         android:id="@+id/item4"
-        android:title="4"
+        android:title="Filtro 3"
         app:showAsAction="never" />
 
 </menu>

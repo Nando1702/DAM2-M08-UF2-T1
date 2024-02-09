@@ -1,10 +1,15 @@
 package com.example.dam2_m08_uf2_t1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
@@ -28,7 +33,50 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        this.mapa = this.findViewById(R.id.mapa);
+        this.mapController = (MapController) this.mapa.getController();
+        // Aplicar zoom al mapa
+        this.mapController.setZoom(18);
+
     }
 
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int num = item.getItemId();
+
+        if (num == R.id.item1) {
+
+
+
+        } else if (num == R.id.item2) {
+
+
+
+        } else if (num == R.id.item3) {
+
+
+
+        } else if (num == R.id.item4) {
+
+
+
+        } else {
+
+            return super.onOptionsItemSelected(item);
+        }
+
+        return true;
+    }
 }
