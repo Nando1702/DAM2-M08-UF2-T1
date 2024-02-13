@@ -1,15 +1,15 @@
 package com.example.dam2_m08_uf2_t1.modelo;
 
-public class EstacionBicing {
+public class EstacionEstat {
 
     private String direccion;
     private String estado;
-    private int bicisDisponibles;
+    private int capacidad;
 
-    public EstacionBicing(String direccion, String estado, int bicisDisponibles) {
+    public EstacionEstat(String direccion, String estado, int capacidad) {
         this.direccion = direccion;
         this.estado = estado;
-        this.bicisDisponibles = bicisDisponibles;
+        this.capacidad = capacidad;
     }
 
     public String getDireccion() {
@@ -28,11 +28,11 @@ public class EstacionBicing {
         this.estado = estado;
     }
 
-    public int getBicisDisponibles() {
-        return bicisDisponibles;
+    public int getCapacidad() {
+        return capacidad;
     }
 
-    public void setBicisDisponibles(int bicisDisponibles) {
-        this.bicisDisponibles = bicisDisponibles;
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
     }
 }

@@ -15,6 +15,8 @@ import android.view.View;
 
 
 import com.example.dam2_m08_uf2_t1.R;
+import com.example.dam2_m08_uf2_t1.apis.ApiClientEstatEstacions;
+import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
 import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
 import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,6 +28,8 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
-        this.adaptador = new Adaptador(this,this);
+        this.adaptador = new Adaptador(this, EEsTADO(),this);
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();
@@ -74,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
 
     }
-
+    private ArrayList<EstacionEstat> EEsTADO(){
+        return ApiClientEstatEstacions.obtenerDatosEstatEstacions();
+    }
 
 
 
