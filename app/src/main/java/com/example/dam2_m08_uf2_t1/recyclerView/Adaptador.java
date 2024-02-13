@@ -10,69 +10,69 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dam2_m08_uf2_t1.R;
+import com.example.dam2_m08_uf2_t1.modelo.EstacionBicing;
 
 import java.util.List;
 
 public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
-    Context context;
-    RecyclerViewInterface rvi;
+    private Context context;
+    private List<EstacionBicing> listaEstaciones;
+    private RecyclerViewInterface rvi;
 
-    public Adaptador(Context context, RecyclerViewInterface rvi) {
+    public Adaptador(Context context, List<EstacionBicing> listaEstaciones, RecyclerViewInterface rvi) {
         this.context = context;
-
+        this.listaEstaciones = listaEstaciones;
         this.rvi = rvi;
     }
 
-
     @NonNull
     @Override
-    public Adaptador.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        if (true){
-
-            notifyDataSetChanged();
-
-        }
-
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recyclerview,parent,false);
-        return new Adaptador.MyViewHolder(view, rvi);
-
+        View view = inflater.inflate(R.layout.recyclerview, parent, false);
+        return new MyViewHolder(view, rvi);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Adaptador.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        EstacionBicing estacion = listaEstaciones.get(position);
 
+        // Asigna los valores a los TextView
+        holder.textViewDireccion.setText(estacion.getDireccion());
+        holder.textViewEstado.setText(estacion.getEstado());
+        holder.textViewBicisDisponibles.setText("Bicis disponibles: " + estacion.getBicisDisponibles());
     }
 
     @Override
     public int getItemCount() {
-
-        return 0;
+        return listaEstaciones.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
+        TextView textViewDireccion;
+        TextView textViewEstado;
+        TextView textViewBicisDisponibles;
 
         public MyViewHolder(@NonNull View itemView, RecyclerViewInterface rvi) {
             super(itemView);
 
+            textViewDireccion = itemView.findViewById(R.id.textViewDireccion);
+            textViewEstado = itemView.findViewById(R.id.textViewEstado);
+            textViewBicisDisponibles = itemView.findViewById(R.id.textViewBicisDisponibles);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    if (rvi != null){
+                    if (rvi != null) {
                         int pos = getAdapterPosition();
-
-                        if (pos != RecyclerView.NO_POSITION){
+                        if (pos != RecyclerView.NO_POSITION) {
                             rvi.onItemCLick(pos);
                         }
                     }
                 }
             });
         }
-
     }
 }
-
