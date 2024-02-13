@@ -1,4 +1,4 @@
-package com.example.dam2_m08_uf2_t1;
+package com.example.dam2_m08_uf2_t1.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.example.dam2_m08_uf2_t1.R;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
