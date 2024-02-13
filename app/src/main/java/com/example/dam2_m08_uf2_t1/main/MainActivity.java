@@ -19,6 +19,8 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,13 +34,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Inicializar osmdroid
+        Context ctx = getApplicationContext();
+        Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
+        // Configurar el directorio de caché (opcional)
+        Configuration.getInstance().setOsmdroidTileCache(getCacheDir());
+        // Configurar otros ajustes de osmdroid si es necesario
+
+        setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         this.mapa = this.findViewById(R.id.mapa);
+        this.mapa.setTileSource(TileSourceFactory.MAPNIK);
+        // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();
         // Aplicar zoom al mapa
         this.mapController.setZoom(18);
+        // Establecer la posición inicial del mapa (ejemplo: Barcelona)
+        this.mapController.setCenter(new GeoPoint(41.3851, 2.1734));
+
+
 
     }
 

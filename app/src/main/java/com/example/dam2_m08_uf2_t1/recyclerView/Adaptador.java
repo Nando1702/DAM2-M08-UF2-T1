@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dam2_m08_uf2_t1.R;
+
 import java.util.List;
 
 public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
@@ -52,10 +54,9 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textTitulo;
+
         public MyViewHolder(@NonNull View itemView, RecyclerViewInterface rvi) {
             super(itemView);
-            textTitulo = itemView.findViewById(R.id.T1);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
