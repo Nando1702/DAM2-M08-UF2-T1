@@ -3,6 +3,7 @@ package com.example.dam2_m08_uf2_t1.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +11,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+
 
 import com.example.dam2_m08_uf2_t1.R;
+import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
+import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
@@ -22,17 +28,25 @@ import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
 
     private MapView mapa;
     private MapController mapController;
     private Context contexto;
+
+    private RecyclerView rv;
+
+    private Adaptador adaptador;
+
+    private boolean isMap;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        isMap = true;
 
         // Inicializar osmdroid
         Context ctx = getApplicationContext();
@@ -47,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         this.mapa = this.findViewById(R.id.mapa);
+        this.rv = this.findViewById(R.id.recyclerView);
+        this.adaptador = new Adaptador(this,this);
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();
@@ -58,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 
 
 
@@ -97,5 +115,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    public void botonListMap(View view){
+
+        cambiarListaMap(view);
+
+
+    }
+
+    private void cambiarListaMap(View view) {
+        FloatingActionButton button = findViewById(R.id.floating_button);
+
+        this.isMap = !this.isMap;
+
+        if (isMap) {
+            mapa.setVisibility(View.VISIBLE);
+            rv.setVisibility(View.GONE);
+            button.setImageResource(R.drawable.baseline_menu_24);
+        } else {
+            mapa.setVisibility(View.GONE);
+            rv.setVisibility(View.VISIBLE);
+            button.setImageResource(R.drawable.baseline_map_24);
+        }
+    }
+
+    @Override
+    public void onItemCLick(int position) {
+
     }
 }
