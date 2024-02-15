@@ -12,12 +12,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+<<<<<<< HEAD
 import android.widget.Toast;
 
 
+=======
+>>>>>>> c30a80327724b56b5db71adcf8b9a1f0730710a9
 import com.example.dam2_m08_uf2_t1.R;
+import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
 import com.example.dam2_m08_uf2_t1.apis.ApiClientEstatEstacions;
 import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
+
 import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
 import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,14 +43,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private MapView mapa;
     private MapController mapController;
     private Context contexto;
-
     private RecyclerView rv;
-
     private Adaptador adaptador;
-
     private boolean isMap;
-
-
+    private ArrayList<EstacionEstat> estacionBicings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +68,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
+<<<<<<< HEAD
         this.adaptador = new Adaptador(this, EEsTADO() ,this);
         Toast.makeText(ctx, EEsTADO().toString(), Toast.LENGTH_SHORT).show();
+=======
+
+        this.adaptador = new Adaptador(this,this.estacionBicings,this);
+
+        this.adaptador = new Adaptador(this, EEsTADO(),this);
+
+>>>>>>> c30a80327724b56b5db71adcf8b9a1f0730710a9
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();
@@ -77,14 +86,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         // Establecer la posición inicial del mapa (ejemplo: Barcelona)
         this.mapController.setCenter(new GeoPoint(41.3851, 2.1734));
 
-
-
     }
+
     private ArrayList<EstacionEstat> EEsTADO(){
         return ApiClientEstatEstacions.obtenerDatosEstatEstacions();
     }
-
-
 
 
 
@@ -129,9 +135,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         cambiarListaMap(view);
 
-
     }
-
     private void cambiarListaMap(View view) {
         FloatingActionButton button = findViewById(R.id.floating_button);
 
@@ -147,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             button.setImageResource(R.drawable.baseline_map_24);
         }
     }
-
     @Override
     public void onItemCLick(int position) {
 
