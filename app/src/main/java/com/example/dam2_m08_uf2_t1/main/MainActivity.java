@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 
 import com.example.dam2_m08_uf2_t1.R;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        System.out.println("hola");
         isMap = true;
 
         // Inicializar osmdroid
@@ -66,7 +67,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
-        this.adaptador = new Adaptador(this, EEsTADO(),this);
+        this.adaptador = new Adaptador(this, EEsTADO() ,this);
+        Toast.makeText(ctx, EEsTADO().toString(), Toast.LENGTH_SHORT).show();
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();

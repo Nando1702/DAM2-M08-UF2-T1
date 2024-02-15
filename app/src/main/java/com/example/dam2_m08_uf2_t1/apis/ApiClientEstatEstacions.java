@@ -29,7 +29,10 @@ public class ApiClientEstatEstacions {
                 .build();
 
         try {
+            System.out.println("--------------------------------------------");
+            System.out.println(request);
             Response response = client.newCall(request).execute();
+            System.out.println(response);
             if (response.isSuccessful()) {
                 String responseData = response.body().string();
                 return parseJsonData(responseData);
