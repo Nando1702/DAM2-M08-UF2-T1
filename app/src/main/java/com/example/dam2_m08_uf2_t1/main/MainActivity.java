@@ -12,12 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-<<<<<<< HEAD
 import android.widget.Toast;
 
-
-=======
->>>>>>> c30a80327724b56b5db71adcf8b9a1f0730710a9
 import com.example.dam2_m08_uf2_t1.R;
 import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
 import com.example.dam2_m08_uf2_t1.apis.ApiClientEstatEstacions;
@@ -68,16 +64,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
-<<<<<<< HEAD
+
         this.adaptador = new Adaptador(this, EEsTADO() ,this);
-        Toast.makeText(ctx, EEsTADO().toString(), Toast.LENGTH_SHORT).show();
-=======
+       //Toast.makeText(ctx, EEsTADO().toString(), Toast.LENGTH_SHORT).show();
 
-        this.adaptador = new Adaptador(this,this.estacionBicings,this);
 
-        this.adaptador = new Adaptador(this, EEsTADO(),this);
 
->>>>>>> c30a80327724b56b5db71adcf8b9a1f0730710a9
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();

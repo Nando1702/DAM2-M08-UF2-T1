@@ -16,9 +16,9 @@ import okhttp3.Response;
 public class ApiClientInfoEstacions {
 
     private static final String BASE_URL = "https://opendata-ajuntament.barcelona.cat/data/dataset/";
-    private static final String DATASET_ID = "informacio-estacions-bicing";  // Reemplaza con el identificador real del conjunto de datos
-    private static final String RESOURCE_ID = "e5adca8d-98bf-42c3-9b9c-364ef0a80494";  // Reemplaza con el identificador real del recurso
-    private static final String TOKEN = "9eff5a7842e152d2a0d8d76728bae2db134fd8796c9fc5a466fe8ffe0e72e2d5";
+    private static final String DATASET_ID = "bd2462df-6e1e-4e37-8205-a4b8e7313b84";  // Reemplaza con el identificador real del conjunto de datos
+    private static final String RESOURCE_ID = "f60e9291-5aaa-417d-9b91-612a9de800aa";  // Reemplaza con el identificador real del recurso
+    private static final String TOKEN = "4426b8c0c77727dfe8f453247a9ede96286a9dfdfb6cbbc98c43d1ed409a5dde";
 
     public static List<EstacionInfo> obtenerDatosInfoEstacions() {
         OkHttpClient client = new OkHttpClient();
