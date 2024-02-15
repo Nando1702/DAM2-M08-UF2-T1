@@ -12,10 +12,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
-
 import com.example.dam2_m08_uf2_t1.R;
-import com.example.dam2_m08_uf2_t1.modelo.EstacionBicing;
+import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
+import com.example.dam2_m08_uf2_t1.apis.ApiClientEstatEstacions;
+import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
+
 import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
 import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private RecyclerView rv;
     private Adaptador adaptador;
     private boolean isMap;
-    private ArrayList<EstacionBicing> estacionBicings;
+    private ArrayList<EstacionEstat> estacionBicings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +62,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
+
         this.adaptador = new Adaptador(this,this.estacionBicings,this);
+
+        this.adaptador = new Adaptador(this, EEsTADO(),this);
+
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();
@@ -71,6 +76,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapController.setCenter(new GeoPoint(41.3851, 2.1734));
 
     }
+
+    private ArrayList<EstacionEstat> EEsTADO(){
+        return ApiClientEstatEstacions.obtenerDatosEstatEstacions();
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
