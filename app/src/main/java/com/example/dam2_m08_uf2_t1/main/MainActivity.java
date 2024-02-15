@@ -15,6 +15,7 @@ import android.view.View;
 
 
 import com.example.dam2_m08_uf2_t1.R;
+import com.example.dam2_m08_uf2_t1.modelo.EstacionBicing;
 import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
 import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,20 +28,18 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
 
     private MapView mapa;
     private MapController mapController;
     private Context contexto;
-
     private RecyclerView rv;
-
     private Adaptador adaptador;
-
     private boolean isMap;
-
-
+    private ArrayList<EstacionBicing> estacionBicings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
-        this.adaptador = new Adaptador(this,this);
+        this.adaptador = new Adaptador(this,this.estacionBicings,this);
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();
@@ -71,14 +70,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         // Establecer la posición inicial del mapa (ejemplo: Barcelona)
         this.mapController.setCenter(new GeoPoint(41.3851, 2.1734));
 
-
-
     }
-
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,9 +113,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         cambiarListaMap(view);
 
-
     }
-
     private void cambiarListaMap(View view) {
         FloatingActionButton button = findViewById(R.id.floating_button);
 
@@ -139,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             button.setImageResource(R.drawable.baseline_map_24);
         }
     }
-
     @Override
     public void onItemCLick(int position) {
 
