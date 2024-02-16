@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -82,7 +83,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
 
     private void EEsTADO(){
-       ApiClientEstatEstacions.obtenerDatosEstatEstacions();
+        ApiClientEstatEstacions.obtenerDatosEstatEstacions(new ApiClientEstatEstacions.OnDataFetchedListener() {
+        @Override
+        public void onDataFetched(String data) {
+            // Aquí manejas los datos obtenidos
+            if (data != null) {
+                Log.d("Datos", data);
+                // Procesar los datos según sea necesario
+            } else {
+                Log.e("Error", "Error al obtener datos");
+                // Manejar el error
+            }
+        }
+    });
     }
 
 

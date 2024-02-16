@@ -1,10 +1,13 @@
 package com.example.dam2_m08_uf2_t1.apis;
 
+import android.util.Log;
+
 import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,30 +22,42 @@ public class ApiClientEstatEstacions {
     private static final String RESOURCE_ID = "f60e9291-5aaa-417d-9b91-612a9de800aa";  // Reemplaza con el identificador real del recurso
     private static final String TOKEN = "4426b8c0c77727dfe8f453247a9ede96286a9dfdfb6cbbc98c43d1ed409a5dde";
 
-    public static void obtenerDatosEstatEstacions() {
-        OkHttpClient client = new OkHttpClient();
-
-        String url = BASE_URL + DATASET_ID + "/resource/" + RESOURCE_ID + "/download";
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("Authorization", TOKEN)
-                .addHeader("Accept", "application/json")
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                String responseData = response.body().string();
-                procesarInformacion(responseData);
-            } else {
-                // Manejar error
-                System.out.println("Error al obtener los datos. Código de respuesta: " + response.code());
-            }
-        } catch (Exception e) {
-            // Manejar excepción
-            e.printStackTrace();
-        }
+    public interface OnDataFetchedListener {
+        void onDataFetched(String data);
     }
+
+    public static void obtenerDatosEstatEstacions(OnDataFetchedListener listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+
+                String url = BASE_URL + DATASET_ID + "/resource/" + RESOURCE_ID + "/download/recurs.json";
+                Request request = new Request.Builder()
+                        .url(url)
+                        .addHeader("Authorization", TOKEN)
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        String data = response.body().string();
+                        if (listener != null) {
+                            listener.onDataFetched(data);
+                        }
+                    } else {
+                        // Manejar error
+                        Log.e("Error", "Error en la solicitud: " + response.code());
+                    }
+                } catch (IOException e) {
+                    // Manejar excepción
+                    e.printStackTrace();
+                    Log.e("Error", "Excepción durante la solicitud: " + e.getMessage());
+                }
+            }
+        }).start();
+    }
+
 
 
     private static void procesarInformacion(String responseData) {
