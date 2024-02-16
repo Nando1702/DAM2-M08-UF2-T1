@@ -9,10 +9,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public class ApiClientEstatEstacions {
     private static RequestQueueSingleton requestQueueSingleton;
 
     public static void obtenerDatosEstatEstacions(Context context,
-                                                  OnDataFetchedListener listener) {
+                                                                      OnDataFetchedListener listener) {
         if (requestQueueSingleton == null) {
             requestQueueSingleton = RequestQueueSingleton.getInstance(context);
         }
