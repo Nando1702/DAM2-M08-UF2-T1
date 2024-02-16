@@ -1,65 +1,79 @@
 package com.example.dam2_m08_uf2_t1.apis;
 
+import android.content.Context;
 import android.util.Log;
 
-import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ApiClientEstatEstacions {
 
-    private static final String BASE_URL = "https://opendata-ajuntament.barcelona.cat/data/dataset/";
-    private static final String DATASET_ID = "bd2462df-6e1e-4e37-8205-a4b8e7313b84";  // Reemplaza con el identificador real del conjunto de datos
-    private static final String RESOURCE_ID = "f60e9291-5aaa-417d-9b91-612a9de800aa";  // Reemplaza con el identificador real del recurso
+    private static final String BASE_URL = "https://opendata-ajuntament.barcelona.cat/data/dataset/6aa3416d-ce1a-494d-861b-7bd07f069600/resource/1b215493-9e63-4a12-8980-2d7e0fa19f85/download";
+
     private static final String TOKEN = "4426b8c0c77727dfe8f453247a9ede96286a9dfdfb6cbbc98c43d1ed409a5dde";
 
     public interface OnDataFetchedListener {
-        void onDataFetched(String data);
+        void onSuccess(JSONObject response);
+
+        void onError(VolleyError error);
     }
 
-    public static void obtenerDatosEstatEstacions(OnDataFetchedListener listener) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpClient client = new OkHttpClient();
+    private static RequestQueueSingleton requestQueueSingleton;
 
-                String url = BASE_URL + DATASET_ID + "/resource/" + RESOURCE_ID + "/download/recurs.json";
-                Request request = new Request.Builder()
-                        .url(url)
-                        .addHeader("Authorization", TOKEN)
-                        .build();
+    public static void obtenerDatosEstatEstacions(Context context,
+                                                  OnDataFetchedListener listener) {
+        if (requestQueueSingleton == null) {
+            requestQueueSingleton = RequestQueueSingleton.getInstance(context);
+        }
 
-                try {
-                    Response response = client.newCall(request).execute();
-                    if (response.isSuccessful()) {
-                        String data = response.body().string();
+        RequestQueue requestQueue = requestQueueSingleton.getRequestQueue();
+
+        String url = BASE_URL;//+ DATASET_ID + "/resource/" + RESOURCE_ID + "/download/recurs.json";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
                         if (listener != null) {
-                            listener.onDataFetched(data);
-                            procesarInformacion(data);
+                            listener.onSuccess(response);
+                            System.out.println(response);
+                            System.out.println("-----------------------------------------------");
+                            System.out.println(response.toString());
+                            procesarInformacion(response.toString());
                         }
-                    } else {
-                        // Manejar error
-                        Log.e("Error", "Error en la solicitud: " + response.code());
                     }
-                } catch (IOException e) {
-                    // Manejar excepción
-                    e.printStackTrace();
-                    Log.e("Error", "Excepción durante la solicitud: " + e.getMessage());
-                }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (listener != null) {
+                            listener.onError(error);
+                        }
+                        Log.e("Volley Error", "Error en la solicitud: " + error.toString());
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                System.out.println("holiiiiiiiiiiiiiiiiiiiiiii");
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", TOKEN);
+                return headers;
             }
-        }).start();
+        };
+
+        requestQueue.add(jsonObjectRequest);
     }
-
-
 
     private static void procesarInformacion(String responseData) {
         try {
@@ -76,15 +90,14 @@ public class ApiClientEstatEstacions {
                 int docksAvailable = station.getInt("num_docks_available");
                 String status = station.getString("status");
 
-                // Aquí puedes hacer lo que desees con la información de cada estación
-                System.out.println("Estación " + stationId + ": Bicis disponibles: " + bikesAvailable
+                // Handle station information as needed
+                Log.d("Estación", "ID: " + stationId + ", Bicis disponibles: " + bikesAvailable
                         + " (Mecánicas: " + mechanicalBikes + ", Eléctricas: " + ebikes
                         + "), Docks disponibles: " + docksAvailable + ", Estado: " + status);
             }
         } catch (Exception e) {
-            // Manejar excepción
+            // Handle exception
             e.printStackTrace();
         }
     }
-
 }

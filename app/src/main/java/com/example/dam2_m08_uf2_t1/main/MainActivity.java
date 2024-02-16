@@ -8,14 +8,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.example.dam2_m08_uf2_t1.R;
+import com.example.dam2_m08_uf2_t1.apis.ApiClientInfoEstacions;
 import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
 import com.example.dam2_m08_uf2_t1.apis.ApiClientEstatEstacions;
 import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
@@ -24,6 +25,7 @@ import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
 import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONObject;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -83,19 +85,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
 
     private void EEsTADO(){
-        ApiClientEstatEstacions.obtenerDatosEstatEstacions(new ApiClientEstatEstacions.OnDataFetchedListener() {
-        @Override
-        public void onDataFetched(String data) {
-            // Aquí manejas los datos obtenidos
-            if (data != null) {
-                Log.d("Datos", data);
-                // Procesar los datos según sea necesario
-            } else {
-                Log.e("Error", "Error al obtener datos");
-                // Manejar el error
+       //ApiClientEstatEstacions.obtenerDatosEstatEstacions();
+        System.out.println("_----------------------------------------");
+        ApiClientEstatEstacions.obtenerDatosEstatEstacions(getApplicationContext(), new ApiClientEstatEstacions.OnDataFetchedListener() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                // Handle success
             }
-        }
-    });
+
+            @Override
+            public void onError(VolleyError error) {
+                // Handle error
+            }
+        });
+
     }
 
 
