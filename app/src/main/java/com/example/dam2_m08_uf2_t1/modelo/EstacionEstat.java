@@ -4,6 +4,7 @@ public class EstacionEstat {
 
     private String direccion;
     private String estado;
+
     private int capacidad;
 
     public EstacionEstat(String direccion, String estado, int capacidad) {

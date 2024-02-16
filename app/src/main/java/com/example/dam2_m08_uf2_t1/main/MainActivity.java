@@ -2,17 +2,19 @@ package com.example.dam2_m08_uf2_t1.main;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.util.GeoPoint;
 
 
 import androidx.annotation.NonNull;
@@ -27,12 +29,10 @@ import com.example.dam2_m08_uf2_t1.apis.ApiClientEstatEstacions;
 import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
 import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
 import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -201,6 +201,40 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             mapController.setCenter(startPoint);
         }
     }
+
+    private void addStationMarker(double latitude, double longitude, boolean isOpen) {
+        Marker stationMarker = new Marker(mapa);
+        stationMarker.setPosition(new GeoPoint(latitude, longitude));
+
+        // Seleccionar el drawable dependiendo de si la estación está abierta o cerrada
+        if (isOpen) {
+            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
+        } else {
+            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcanegra)); // Reemplaza con el drawable para estación cerrada
+        }
+
+        mapa.getOverlays().add(stationMarker);
+
+        stationMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                // Crear un Intent para abrir la actividad DetalleEstacionActivity
+
+                Intent intent = new Intent(MainActivity.this, Ubicacion.class);
+
+                // Agregar cualquier dato adicional que desees pasar a la actividad
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                intent.putExtra("isOpen", isOpen);
+
+                // Iniciar la actividad
+                startActivity(intent);
+
+                return true; // Devuelve true para indicar que el evento de clic ha sido manejado
+            }
+        });
+    }
+
 }
 
 
