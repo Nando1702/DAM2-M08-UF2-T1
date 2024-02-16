@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         System.out.println("hola");
+        EEsTADO();
         isMap = true;
 
         // Inicializar osmdroid
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
 
-        this.adaptador = new Adaptador(this, EEsTADO() ,this);
+        this.adaptador = new Adaptador(this, /*EEsTADO()*/null ,this);
        //Toast.makeText(ctx, EEsTADO().toString(), Toast.LENGTH_SHORT).show();
 
 
@@ -80,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     }
 
-    private ArrayList<EstacionEstat> EEsTADO(){
-        return ApiClientEstatEstacions.obtenerDatosEstatEstacions();
+    private void EEsTADO(){
+       ApiClientEstatEstacions.obtenerDatosEstatEstacions();
     }
 
 

@@ -15,58 +15,60 @@ import okhttp3.Response;
 public class ApiClientEstatEstacions {
 
     private static final String BASE_URL = "https://opendata-ajuntament.barcelona.cat/data/dataset/";
-    private static final String DATASET_ID = "6aa3416d-ce1a-494d-861b-7bd07f069600";  // Reemplaza con el identificador real del conjunto de datos
-    private static final String RESOURCE_ID = "1b215493-9e63-4a12-8980-2d7e0fa19f85";  // Reemplaza con el identificador real del recurso
+    private static final String DATASET_ID = "bd2462df-6e1e-4e37-8205-a4b8e7313b84";  // Reemplaza con el identificador real del conjunto de datos
+    private static final String RESOURCE_ID = "f60e9291-5aaa-417d-9b91-612a9de800aa";  // Reemplaza con el identificador real del recurso
     private static final String TOKEN = "4426b8c0c77727dfe8f453247a9ede96286a9dfdfb6cbbc98c43d1ed409a5dde";
 
-    public static ArrayList<EstacionEstat> obtenerDatosEstatEstacions() {
+    public static void obtenerDatosEstatEstacions() {
         OkHttpClient client = new OkHttpClient();
 
-        String url = BASE_URL + DATASET_ID + "/resource/" + RESOURCE_ID + "/download/recurs.json";
+        String url = BASE_URL + DATASET_ID + "/resource/" + RESOURCE_ID + "/download";
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", TOKEN)
+                .addHeader("Accept", "application/json")
                 .build();
 
         try {
-            System.out.println("--------------------------------------------");
-            System.out.println(request);
             Response response = client.newCall(request).execute();
-            System.out.println(response);
             if (response.isSuccessful()) {
                 String responseData = response.body().string();
-                return parseJsonData(responseData);
+                procesarInformacion(responseData);
             } else {
                 // Manejar error
-                return null;
+                System.out.println("Error al obtener los datos. Código de respuesta: " + response.code());
             }
         } catch (Exception e) {
             // Manejar excepción
             e.printStackTrace();
-            return null;
-
         }
     }
 
-    private static ArrayList<EstacionEstat> parseJsonData(String jsonData) {
-        ArrayList<EstacionEstat> estacionesEstatList = new ArrayList<>();
 
+    private static void procesarInformacion(String responseData) {
         try {
-            JSONArray jsonArray = new JSONArray(jsonData);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonEstacion = jsonArray.getJSONObject(i);
+            JSONObject jsonObject = new JSONObject(responseData);
+            JSONObject data = jsonObject.getJSONObject("data");
+            JSONArray stations = data.getJSONArray("stations");
 
-                String address = jsonEstacion.getString("address");
-                String status = jsonEstacion.getString("status");
-                int bikesAvailable = jsonEstacion.getInt("bikesAvailable");
+            for (int i = 0; i < stations.length(); i++) {
+                JSONObject station = stations.getJSONObject(i);
+                int stationId = station.getInt("station_id");
+                int bikesAvailable = station.getInt("num_bikes_available");
+                int mechanicalBikes = station.getJSONObject("num_bikes_available_types").getInt("mechanical");
+                int ebikes = station.getJSONObject("num_bikes_available_types").getInt("ebike");
+                int docksAvailable = station.getInt("num_docks_available");
+                String status = station.getString("status");
 
-                EstacionEstat estacion = new EstacionEstat(address, status, bikesAvailable);
-                estacionesEstatList.add(estacion);
+                // Aquí puedes hacer lo que desees con la información de cada estación
+                System.out.println("Estación " + stationId + ": Bicis disponibles: " + bikesAvailable
+                        + " (Mecánicas: " + mechanicalBikes + ", Eléctricas: " + ebikes
+                        + "), Docks disponibles: " + docksAvailable + ", Estado: " + status);
             }
         } catch (Exception e) {
+            // Manejar excepción
             e.printStackTrace();
         }
-
-        return estacionesEstatList;
     }
+
 }
