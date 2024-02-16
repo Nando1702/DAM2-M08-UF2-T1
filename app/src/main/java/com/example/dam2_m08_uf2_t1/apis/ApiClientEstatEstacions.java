@@ -44,6 +44,7 @@ public class ApiClientEstatEstacions {
                         String data = response.body().string();
                         if (listener != null) {
                             listener.onDataFetched(data);
+                            procesarInformacion(data);
                         }
                     } else {
                         // Manejar error
