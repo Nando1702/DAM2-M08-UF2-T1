@@ -1,39 +1,44 @@
 package com.example.dam2_m08_uf2_t1.main;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.dam2_m08_uf2_t1.R;
-import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
 import com.example.dam2_m08_uf2_t1.apis.ApiClientEstatEstacions;
 import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
-
 import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
 import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.infowindow.BasicInfoWindow;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
 
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private RecyclerView rv;
     private Adaptador adaptador;
     private boolean isMap;
+    private MyLocationNewOverlay myLocationOverlay;
     private ArrayList<EstacionEstat> estacionBicings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +74,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.rv = this.findViewById(R.id.recyclerView);
 
         this.adaptador = new Adaptador(this, /*EEsTADO()*/null ,this);
-       //Toast.makeText(ctx, EEsTADO().toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(ctx, EEsTADO().toString(), Toast.LENGTH_SHORT).show();
 
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            iniciarMapaConUbicacionActual();
+        }
+
+        FusedLocationProviderClient  fps = LocationServices.getFusedLocationProviderClient(this);
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
 
 
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
@@ -82,20 +100,26 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     }
 
+    private void iniciarMapaConUbicacionActual() {
+        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapa);
+        myLocationOverlay.enableMyLocation();
+        mapa.getOverlays().add(myLocationOverlay);
+        GeoPoint startPoint = myLocationOverlay.getMyLocation();
+
+        if (startPoint != null) {
+            mapController.setCenter(startPoint);
+        }
+    }
+
     private void EEsTADO(){
         ApiClientEstatEstacions.obtenerDatosEstatEstacions(new ApiClientEstatEstacions.OnDataFetchedListener() {
-        @Override
-        public void onDataFetched(String data) {
-            // Aquí manejas los datos obtenidos
-            if (data != null) {
-                Log.d("Datos", data);
-                // Procesar los datos según sea necesario
-            } else {
-                Log.e("Error", "Error al obtener datos");
-                // Manejar el error
+
+
+            @Override
+            public void onDataFetched(String data) {
+
             }
-        }
-    });
+        });
     }
 
 
@@ -161,4 +185,22 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     public void onItemCLick(int position) {
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            iniciarMapaConUbicacionActual();
+        }
+    }
+
+    public void centrarMapa(View view) {
+        GeoPoint startPoint = myLocationOverlay.getMyLocation();
+
+        if (startPoint != null) {
+            mapController.setCenter(startPoint);
+        }
+    }
 }
+
+
