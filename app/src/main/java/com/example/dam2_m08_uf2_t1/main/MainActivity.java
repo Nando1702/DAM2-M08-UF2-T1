@@ -3,8 +3,10 @@ package com.example.dam2_m08_uf2_t1.main;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,6 +50,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private RecyclerView rv;
     private Adaptador adaptador;
     private boolean isMap;
+
+    private static int mode = 0;
+
+    private static final int MODE_MEZCLADO = 0;
+
+    private static final int MODE_ABIERTO = 1;
+
+    private static final int MODE_CERRADAS = 2;
+
+    private static final int MODE_FAVORITAS = 3;
+
     private MyLocationNewOverlay myLocationOverlay;
     private ArrayList<EstacionEstat> estacionBicings;
     @Override
@@ -57,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         System.out.println("hola");
         EEsTADO();
         isMap = true;
+
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Inicializar osmdroid
         Context ctx = getApplicationContext();
@@ -195,11 +211,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
 
     public void centrarMapa(View view) {
-        GeoPoint startPoint = myLocationOverlay.getMyLocation();
 
-        if (startPoint != null) {
-            mapController.setCenter(startPoint);
-        }
+        GeoPoint myLocation = myLocationOverlay.getMyLocation();
+            if (myLocation != null) {
+                mapController.setCenter(myLocation);
+            }
+
     }
 
     private void addStationMarker(double latitude, double longitude, boolean isOpen) {
@@ -219,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             @Override
             public boolean onMarkerClick(Marker marker, MapView mapView) {
                 // Crear un Intent para abrir la actividad DetalleEstacionActivity
-
                 Intent intent = new Intent(MainActivity.this, Ubicacion.class);
 
                 // Agregar cualquier dato adicional que desees pasar a la actividad
