@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private ArrayList<Estacion> estacionBicings;
     private ArrayList<Estacion> auxEstacion;
     private MenuItem m1;
+    private boolean arrayLleno = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     // Manipular la lista estacionBicings dentro de este bloque synchronized
                     estacionBicings = estacionesInfo;
                     adaptador.setListaEstaciones(estacionBicings);
+                    arrayLleno = true;
+
+                    crearMarcas();
 
             }
 
@@ -353,6 +357,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         cargarMapa();
 
+    }
+
+    private void crearMarcas(){
+
+        for (Estacion est: estacionBicings) {
+
+            addStationMarker(est.getLat(),est.getLon(),est.getStatus().equals("IN_SERVICE"),false);
+
+
+        }
     }
 
 }
