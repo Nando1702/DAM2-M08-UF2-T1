@@ -15,6 +15,7 @@ import android.view.View;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.util.GeoPoint;
 
@@ -60,15 +61,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private static int mode = 0;
 
     private static final int MODE_MEZCLADO = 0;
-
     private static final int MODE_ABIERTO = 1;
-
-    private static final int MODE_CERRADAS = 2;
-
-    private static final int MODE_FAVORITAS = 3;
-
+    private static final int MODE_FAVORITAS = 2;
+    private static final int MODE_DISTANCIA = 3;
     private MyLocationNewOverlay myLocationOverlay;
     private ArrayList<Estacion> estacionBicings;
+    private ArrayList<Estacion> auxEstacion;
     private MenuItem m1;
 
     @Override
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
 
-        this.adaptador = new Adaptador(this, estacionBicings,this);
+        this.adaptador = new Adaptador(this, estacionBicings, this);
         rv.setAdapter(adaptador);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
@@ -109,13 +107,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             iniciarMapaConUbicacionActual();
         }
 
-        FusedLocationProviderClient  fps = LocationServices.getFusedLocationProviderClient(this);
+        FusedLocationProviderClient fps = LocationServices.getFusedLocationProviderClient(this);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10000);
 
 
-       cargarMapa();
+        cargarMapa();
 
     }
 
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         }
     }
 
-    private void EEsTADO(){
+    private void EEsTADO() {
         ApiClientEstatEstacions.obtenerDatosEstatEstacions(getApplicationContext(), new ApiClientEstatEstacions.OnDataFetchedListener() {
             @Override
             public void onSuccess(ArrayList<Estacion> estacionEStat) {
@@ -159,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
 
     }
-
 
 
     @Override
@@ -184,17 +181,46 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         } else if (num == R.id.item2) {
 
+            if (mode != MODE_ABIERTO) {
+
+                mode = MODE_ABIERTO;
+                borrarMarcadoresMapa();
+
+
+            }
 
 
         } else if (num == R.id.item3) {
 
+            if (mode != MODE_FAVORITAS) {
+
+                mode = MODE_FAVORITAS;
+                borrarMarcadoresMapa();
+
+            }
 
 
         } else if (num == R.id.item4) {
 
+            if (mode != MODE_DISTANCIA){
 
+                mode = MODE_DISTANCIA;
+                borrarMarcadoresMapa();
+
+            }
+
+
+        } else if (num == R.id.item5) {
+
+            if (mode != MODE_MEZCLADO){
+
+                mode = MODE_MEZCLADO;
+                borrarMarcadoresMapa();
+
+            }
 
         } else {
+
 
             return super.onOptionsItemSelected(item);
         }
@@ -202,11 +228,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         return true;
     }
 
-    public void botonListMap(View view){
+    public void botonListMap(View view) {
 
         cambiarListaMap();
 
     }
+
     private void cambiarListaMap() {
 
         FloatingActionButton button = findViewById(R.id.floating_button);
@@ -227,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             m1.setTitle("Mapa");
         }
     }
+
     @Override
     public void onItemCLick(int position) {
 
@@ -243,9 +271,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     public void centrarMapa(View view) {
 
         GeoPoint myLocation = myLocationOverlay.getMyLocation();
-            if (myLocation != null) {
-                mapController.setCenter(myLocation);
-            }
+        if (myLocation != null) {
+            mapController.setCenter(myLocation);
+        }
 
     }
 
@@ -281,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         });
     }
 
-    private void borrarMarcadoresMapa(){
+    private void borrarMarcadoresMapa() {
 
         mapa.getOverlays().clear();
         mapa.invalidate();
