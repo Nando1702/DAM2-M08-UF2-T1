@@ -1,6 +1,8 @@
 package com.example.dam2_m08_uf2_t1.main;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,18 +15,21 @@ public class SharedPref {
     }
 
     public static void addFavoriteLocation(Context context, int locationId) {
+        Log.d("SharedPref", "Adding location to favorites: " + locationId);
         Set<String> favoriteLocations = getFavoriteLocationsSet(context);
         favoriteLocations.add(String.valueOf(locationId));
         saveFavoriteLocations(context, favoriteLocations);
     }
 
     public static void removeFavoriteLocation(Context context, int locationId) {
+        Log.d("SharedPref", "Removing location from favorites: " + locationId);
         Set<String> favoriteLocations = getFavoriteLocationsSet(context);
         favoriteLocations.remove(String.valueOf(locationId));
         saveFavoriteLocations(context, favoriteLocations);
     }
 
     public static Set<Integer> getFavoriteLocationsInt(Context context) {
+        Log.d("SharedPref", "Getting favorite locations");
         Set<String> stringSet = getFavoriteLocationsSet(context);
         Set<Integer> integerSet = new HashSet<>();
 

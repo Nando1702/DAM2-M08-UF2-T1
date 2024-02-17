@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
         // Inicializar osmdroid
 
-
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
         // Configurar el directorio de caché (opcional)
@@ -133,7 +132,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
 
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapa.onPause();  // Pausar el mapa para liberar recursos
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapa.onResume();  // Reanudar el mapa cuando la actividad se reanuda
+    }
     private void cargarMapa() {
 
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
