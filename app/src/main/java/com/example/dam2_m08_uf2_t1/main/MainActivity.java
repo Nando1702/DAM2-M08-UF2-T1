@@ -176,11 +176,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         ApiClientInfoEstacions.obtenerDatosinfoEstacions(getApplicationContext(), estacionEstat, new ApiClientInfoEstacions.OnDataFetchedListener() {
             @Override
             public void onSuccess(ArrayList<Estacion> estacionesInfo) {
-                // Manejar el éxito si es necesario
-                // System.out.println("Hola");
-                estacionBicings = estacionesInfo;
 
-                adaptador.setListaEstaciones(estacionBicings);
+                    // Manipular la lista estacionBicings dentro de este bloque synchronized
+                    estacionBicings = estacionesInfo;
+                    adaptador.setListaEstaciones(estacionBicings);
+
             }
 
             @Override
