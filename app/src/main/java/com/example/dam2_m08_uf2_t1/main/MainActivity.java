@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private boolean arrayLleno = false;
 
     private Set<Integer> ubicacionesFavoritasId;
-    private int maxDistance = 10000;
+    private int maxDistance = 1000000000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
             filtDistancia = !filtDistancia;
             m5.setChecked(filtDistancia);
-            
+
             borrarMarcadoresMapa();
             cargarMapa();
 
@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             }
 
             crearMarcas(auxEstacion);
+            adaptador.setListaEstaciones(auxEstacion);
 
 
         } else if (num == R.id.item6) {
