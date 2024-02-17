@@ -51,6 +51,7 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
 
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private MenuItem m1;
     private boolean arrayLleno = false;
 
+    private Set<Integer> ubicacionesFavoritasId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,9 +86,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
 
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-
+        ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
         // Inicializar osmdroid
+
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
         // Configurar el directorio de caché (opcional)
@@ -178,8 +181,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     adaptador.setListaEstaciones(estacionBicings);
                     arrayLleno = true;
 
+                    getfavoritesPref();
                     crearMarcas(estacionBicings);
-
+                    
             }
 
             @Override
@@ -428,6 +432,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             addStationMarker(est);
 
         }
+    }
+
+    private void getfavoritesPref(){
+
+        for (Estacion est : estacionBicings) {
+            if (ubicacionesFavoritasId.contains(est.getStationId())) {
+                est.setFavorite(true);
+            } else {
+                est.setFavorite(false);
+            }
+        }
+
     }
 
 }
