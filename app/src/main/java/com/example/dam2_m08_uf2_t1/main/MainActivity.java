@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
 
         ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
-        // Inicializar osmdroid
 
+        // Inicializar osmdroid
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
         // Configurar el directorio de caché (opcional)
@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     auxEstacion =estacionBicings;
                     getfavoritesPref();
                     crearMarcas(estacionBicings);
+                    obtenerDistancias();
 
             }
 
@@ -384,6 +385,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     // Actualizar la distancia máxima con el valor ingresado por el usuario
                     maxDistance = Integer.parseInt(inputText);
                     // Aquí puedes utilizar el valor de maxDistance para filtrar las ubicaciones cercanas al usuario
+
                     borrarMarcadoresMapa();
                     filtrarDistanciaAuxEstacion(auxEstacion);
                     crearMarcas(auxEstacion);
@@ -613,6 +615,31 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         System.out.println(location1.distanceTo(location2));
 
         return location1.distanceTo(location2);
+    }
+
+    private void obtenerDistancias(){
+
+
+
+        for (Estacion est: estacionBicings) {
+
+            float distanciaAux = 0;
+
+            for (Estacion estacion: estacionBicings){
+
+                float distancia = calcularDistancia(est.getLon(),est.getLat(),
+                        estacion.getLon(),estacion.getLat());
+
+                if ( distancia < distanciaAux){
+                    distancia = distanciaAux;
+                    est.setRefEstacionCercana(estacion.getName());
+                }
+
+            }
+
+
+        }
+
     }
 
 }

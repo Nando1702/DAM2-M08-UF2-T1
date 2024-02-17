@@ -33,6 +33,7 @@ public class Estacion implements Serializable {
     private boolean rideCodeSupport;
     private Object rentalUris; // Puedes ajustar el tipo según la estructura real
 
+    private String refEstacionCercana;
     // Constructor
 
     public Estacion(int stationId, int num_bikes_available, int bikes_mechanical, int bikes_ebike, int num_docks_available, int last_reported, boolean is_charging_station, String status, int is_installed, int is_renting, int is_returning, int traffic) {
@@ -252,6 +253,14 @@ public class Estacion implements Serializable {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    public String getRefEstacionCercana() {
+        return refEstacionCercana;
+    }
+
+    public void setRefEstacionCercana(String refEstacionCercana) {
+        this.refEstacionCercana = refEstacionCercana;
     }
 
     @Override
