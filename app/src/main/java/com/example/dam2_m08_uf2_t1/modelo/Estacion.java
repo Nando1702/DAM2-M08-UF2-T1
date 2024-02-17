@@ -28,7 +28,7 @@ public class Estacion implements Serializable {
     private String address;
     private String postCode;
     private int capacity;
-    private boolean isChargingStation;
+    private boolean isChargingStation;//hay 2 de estos cual quitamos?
     private double nearbyDistance;
     private boolean rideCodeSupport;
     private Object rentalUris; // Puedes ajustar el tipo según la estructura real

@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     estacionBicings = estacionesInfo;
                     adaptador.setListaEstaciones(estacionBicings);
                     arrayLleno = true;
-
+                    auxEstacion =estacionBicings;
                     getfavoritesPref();
                     crearMarcas(estacionBicings);
                     
@@ -324,7 +324,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     @Override
     public void onItemCLick(int position) {
 
-
+        Intent intent = new Intent(MainActivity.this, DetalleEstacionActivity.class);
+        intent.putExtra("estacion", auxEstacion.get(position));
+        startActivity(intent);
 
     }
 
@@ -371,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         });
 
     }
+
     private void showStationDetails(Estacion estacion, Marker stationMarker) {
         // Crear un cuadro de diálogo o vista emergente para mostrar los detalles de la estación
         // Aquí puedes utilizar un cuadro de diálogo personalizado o una vista emergente según tus necesidades
@@ -418,6 +421,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+
     private void colorMarcaEstacion(Estacion estacion, Marker stationMarker){
         if (estacion.isFavorite()) {
             SharedPref.addFavoriteLocation(getApplicationContext(),estacion.getStationId());

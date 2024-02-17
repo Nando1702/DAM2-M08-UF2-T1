@@ -1,9 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.DetalleEstacionActivity">
+
+    <!-- Id de la estación -->
+    <TextView
+        android:id="@+id/textIdEstacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Id de la estación: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp" />
+
+    <!-- Nombre de la estación -->
+    <TextView
+        android:id="@+id/textNombreEstacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre de la estación: "
+        app:layout_constraintTop_toBottomOf="@id/textIdEstacion"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Dirección -->
+    <TextView
+        android:id="@+id/textDireccion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dirección: "
+        app:layout_constraintTop_toBottomOf="@id/textNombreEstacion"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Bicis disponibles -->
+    <TextView
+        android:id="@+id/textBicisDisponibles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bicis disponibles: "
+        app:layout_constraintTop_toBottomOf="@id/textDireccion"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Latitud -->
+    <TextView
+        android:id="@+id/textLatitud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Latitud: "
+        app:layout_constraintTop_toBottomOf="@id/textBicisDisponibles"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Longitud -->
+    <TextView
+        android:id="@+id/textLongitud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Longitud: "
+        app:layout_constraintTop_toBottomOf="@id/textLatitud"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Bicis mecánicas disponibles -->
+    <TextView
+        android:id="@+id/textBikes_mechanical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bicis mecánicas disponibles: "
+        app:layout_constraintTop_toBottomOf="@id/textLongitud"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Bicis eléctricas disponibles -->
+    <TextView
+        android:id="@+id/textBikes_ebike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bicis eléctricas disponibles: "
+        app:layout_constraintTop_toBottomOf="@id/textBikes_mechanical"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Número de muelles disponibles -->
+    <TextView
+        android:id="@+id/textNum_docks_available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Número de muelles disponibles: "
+        app:layout_constraintTop_toBottomOf="@id/textBikes_ebike"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Último reportado -->
+    <TextView
+        android:id="@+id/textLast_reported"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Último reportado: "
+        app:layout_constraintTop_toBottomOf="@id/textNum_docks_available"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Estación de carga -->
+    <TextView
+        android:id="@+id/textIs_charging_station"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estación de carga: "
+        app:layout_constraintTop_toBottomOf="@id/textLast_reported"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Estado -->
+    <TextView
+        android:id="@+id/textStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estado: "
+        app:layout_constraintTop_toBottomOf="@id/textIs_charging_station"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Configuración física -->
+    <TextView
+        android:id="@+id/textPhysicalConfiguration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Configuración física: "
+        app:layout_constraintTop_toBottomOf="@id/textStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Código postal -->
+    <TextView
+        android:id="@+id/textPostCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Código postal: "
+        app:layout_constraintTop_toBottomOf="@id/textPhysicalConfiguration"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Altitud -->
+    <TextView
+        android:id="@+id/textAltitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Altitud: "
+        app:layout_constraintTop_toBottomOf="@id/textPostCode"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Favorita -->
+    <TextView
+        android:id="@+id/textIsFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorita: "
+        app:layout_constraintTop_toBottomOf="@id/textAltitude"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Capacidad -->
+    <TextView
+        android:id="@+id/textCapacity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Capacidad: "
+        app:layout_constraintTop_toBottomOf="@id/textIsFavorite"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp" />
+
+    <!-- Soporte de código de viaje -->
+    <TextView
+        android:id="@+id/textRideCodeSupport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Soporte de código de viaje: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textCapacity" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Cerrar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textRideCodeSupport" />
+
+    <TextView
+        android:id="@+id/textestacionMasCercana"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="25dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/textRideCodeSupport" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
