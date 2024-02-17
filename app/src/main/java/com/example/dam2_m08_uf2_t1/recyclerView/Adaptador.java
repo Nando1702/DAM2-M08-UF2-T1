@@ -39,14 +39,29 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
         Estacion estacion = listaEstaciones.get(position);
 
         // Asigna los valores a los TextView
+/*
         holder.textViewDireccion.setText(estacion.getDireccion());//es getadrres son cosas diferentes y tal hay cosas nuevas ;_;
         holder.textViewEstado.setText(estacion.getEstado());
         holder.textViewBicisDisponibles.setText("Bicis disponibles: " + estacion.getCapacidad());
+
+        holder.textViewDireccion.setText(estacion.getAddress());
+        holder.textViewEstado.setText(estacion.getStatus());
+        holder.textViewBicisDisponibles.setText("Bicis disponibles: " + estacion.getCapacity());
+*/
     }
 
     @Override
     public int getItemCount() {
+
+        if (listaEstaciones == null){
+            return 0;
+        }
+
         return listaEstaciones.size();
+    }
+
+    public void setListaEstaciones(List<Estacion> listaEstaciones) {
+        this.listaEstaciones = listaEstaciones;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

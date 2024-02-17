@@ -15,6 +15,7 @@ import android.view.View;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.util.GeoPoint;
 
@@ -23,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -59,19 +61,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private static int mode = 0;
 
     private static final int MODE_MEZCLADO = 0;
-
     private static final int MODE_ABIERTO = 1;
-
-    private static final int MODE_CERRADAS = 2;
-
-    private static final int MODE_FAVORITAS = 3;
-
+    private static final int MODE_FAVORITAS = 2;
+    private static final int MODE_DISTANCIA = 3;
     private MyLocationNewOverlay myLocationOverlay;
     private ArrayList<Estacion> estacionBicings;
+    private ArrayList<Estacion> auxEstacion;
+    private MenuItem m1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         obtenerEstatEstacions();//ehhh activa las apis y lo guarda_Todo en estacionBicings X_X ------------------------ferb lo nuevo :D----------------
 
         isMap = true;
@@ -86,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         Configuration.getInstance().setOsmdroidTileCache(getCacheDir());
         // Configurar otros ajustes de osmdroid si es necesario
 
-        setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,8 +95,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
 
+
         this.adaptador = new Adaptador(this, estacionBicings ,this);//hay q cambiar cosas en el adaptador
 
+        rv.setAdapter(adaptador);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+
+        addStationMarker(41.3851, 2.1734, true,false);
+
+        addStationMarker(41.3851, 2.1740, false,false);
+
+        addStationMarker(41.3849, 2.1744,false,true);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -104,11 +115,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             iniciarMapaConUbicacionActual();
         }
 
-        FusedLocationProviderClient  fps = LocationServices.getFusedLocationProviderClient(this);
+        FusedLocationProviderClient fps = LocationServices.getFusedLocationProviderClient(this);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10000);
 
+
+        cargarMapa();
+
+    }
+
+    private void cargarMapa() {
 
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
@@ -131,7 +148,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         }
     }
 
+
     private void obtenerEstatEstacions(){
+
         ApiClientEstatEstacions.obtenerDatosEstatEstacions(getApplicationContext(), new ApiClientEstatEstacions.OnDataFetchedListener() {
             @Override
             public void onSuccess(ArrayList<Estacion> estacionEstat) {
@@ -160,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 // Manejar el error si es necesario
             }
         });
+
     }
 
 
@@ -167,6 +187,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+
+        m1 = menu.findItem(R.id.item1);
 
         return true;
     }
@@ -178,21 +200,51 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         if (num == R.id.item1) {
 
+            cambiarListaMap();
 
 
         } else if (num == R.id.item2) {
 
+            if (mode != MODE_ABIERTO) {
+
+                mode = MODE_ABIERTO;
+                borrarMarcadoresMapa();
+
+
+            }
 
 
         } else if (num == R.id.item3) {
 
+            if (mode != MODE_FAVORITAS) {
+
+                mode = MODE_FAVORITAS;
+                borrarMarcadoresMapa();
+
+            }
 
 
         } else if (num == R.id.item4) {
 
+            if (mode != MODE_DISTANCIA) {
 
+                mode = MODE_DISTANCIA;
+                borrarMarcadoresMapa();
+
+            }
+
+
+        } else if (num == R.id.item5) {
+
+            if (mode != MODE_MEZCLADO) {
+
+                mode = MODE_MEZCLADO;
+                borrarMarcadoresMapa();
+
+            }
 
         } else {
+
 
             return super.onOptionsItemSelected(item);
         }
@@ -200,13 +252,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         return true;
     }
 
-    public void botonListMap(View view){
+    public void botonListMap(View view) {
 
-        cambiarListaMap(view);
+        cambiarListaMap();
 
     }
-    private void cambiarListaMap(View view) {
+
+    private void cambiarListaMap() {
+
         FloatingActionButton button = findViewById(R.id.floating_button);
+
 
         this.isMap = !this.isMap;
 
@@ -214,12 +269,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             mapa.setVisibility(View.VISIBLE);
             rv.setVisibility(View.GONE);
             button.setImageResource(R.drawable.baseline_menu_24);
+            m1.setTitle("Lista");
+
         } else {
             mapa.setVisibility(View.GONE);
             rv.setVisibility(View.VISIBLE);
             button.setImageResource(R.drawable.baseline_map_24);
+            m1.setTitle("Mapa");
         }
     }
+
     @Override
     public void onItemCLick(int position) {
 
@@ -236,23 +295,25 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     public void centrarMapa(View view) {
 
         GeoPoint myLocation = myLocationOverlay.getMyLocation();
-            if (myLocation != null) {
-                mapController.setCenter(myLocation);
-            }
+        if (myLocation != null) {
+            mapController.setCenter(myLocation);
+        }
 
     }
 
-    private void addStationMarker(double latitude, double longitude, boolean isOpen) {
+    private void addStationMarker(double latitude, double longitude, boolean isOpen, boolean isFavorite) {
         Marker stationMarker = new Marker(mapa);
         stationMarker.setPosition(new GeoPoint(latitude, longitude));
 
-        // Seleccionar el drawable dependiendo de si la estación está abierta o cerrada
-        if (isOpen) {
-            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
+        if (isFavorite) {
+            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaamarilla)); // Reemplaza con el drawable para estación abierta
         } else {
-            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcanegra)); // Reemplaza con el drawable para estación cerrada
+            if (isOpen) {
+                stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
+            } else {
+                stationMarker.setIcon(getResources().getDrawable(R.drawable.marcanegra)); // Reemplaza con el drawable para estación cerrada
+            }
         }
-
         mapa.getOverlays().add(stationMarker);
 
         stationMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
@@ -272,6 +333,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 return true; // Devuelve true para indicar que el evento de clic ha sido manejado
             }
         });
+    }
+
+    private void borrarMarcadoresMapa() {
+
+        mapa.getOverlays().clear();
+        mapa.invalidate();
+
+        cargarMapa();
+
     }
 
 }
