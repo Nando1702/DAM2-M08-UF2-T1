@@ -76,10 +76,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private ArrayList<Estacion> estacionBicings;
     private ArrayList<Estacion> auxEstacion;
     private MenuItem m1;
+
+    private MenuItem m5;
     private boolean arrayLleno = false;
 
     private Set<Integer> ubicacionesFavoritasId;
-    private int maxDistance;
+    private int maxDistance = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         inflater.inflate(R.menu.menu, menu);
 
         m1 = menu.findItem(R.id.item1);
+        m5 = menu.findItem(R.id.item5);
+
 
         return true;
     }
@@ -276,6 +280,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         } else if (num == R.id.item5) {
 
             filtDistancia = !filtDistancia;
+            m5.setChecked(filtDistancia);
+            
             borrarMarcadoresMapa();
             cargarMapa();
 
