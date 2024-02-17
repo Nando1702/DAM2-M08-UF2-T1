@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
         // Inicializar osmdroid
+
 
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
@@ -209,6 +211,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        auxEstacion = new ArrayList<>();
+
         int num = item.getItemId();
 
         if (num == R.id.item1) {
@@ -226,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
                 for (Estacion est : estacionBicings) {
 
-                    if (est.getStatus().equals("IM_SERVICE")) {
+                    if (est.getStatus().equals("IN_SERVICE")) {
                         auxEstacion.add(est);
                     }
 
@@ -451,14 +455,34 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     private void getfavoritesPref(){
 
+        for (Integer ubicacionesFavoritas: ubicacionesFavoritasId
+             ) {
+
+            System.out.println(ubicacionesFavoritas);
+
+        }
+
         for (Estacion est : estacionBicings) {
             if (ubicacionesFavoritasId.contains(est.getStationId())) {
                 est.setFavorite(true);
+                System.out.println(est);
             } else {
                 est.setFavorite(false);
             }
         }
 
+    }
+
+    public static float calcularDistancia(double lat1, double lon1, double lat2, double lon2) {
+        Location location1 = new Location("");
+        location1.setLatitude(lat1);
+        location1.setLongitude(lon1);
+
+        Location location2 = new Location("");
+        location2.setLatitude(lat2);
+        location2.setLongitude(lon2);
+
+        return location1.distanceTo(location2);
     }
 
 }
