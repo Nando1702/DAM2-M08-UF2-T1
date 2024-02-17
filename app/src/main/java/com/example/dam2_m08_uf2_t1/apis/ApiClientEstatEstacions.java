@@ -9,7 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
+import com.example.dam2_m08_uf2_t1.modelo.Estacion;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,9 +23,9 @@ public class ApiClientEstatEstacions {
     private static final String BASE_URL = "https://opendata-ajuntament.barcelona.cat/data/dataset/6aa3416d-ce1a-494d-861b-7bd07f069600/resource/1b215493-9e63-4a12-8980-2d7e0fa19f85/download";
 
     private static final String TOKEN = "4426b8c0c77727dfe8f453247a9ede96286a9dfdfb6cbbc98c43d1ed409a5dde";
-
+    private ArrayList<Estacion> estacionEStat = new ArrayList<Estacion>();
     public interface OnDataFetchedListener {
-        void onSuccess(JSONObject response);
+        void onSuccess(ArrayList<Estacion> estacionEStat);
 
         void onError(VolleyError error);
     }
@@ -40,7 +40,7 @@ public class ApiClientEstatEstacions {
 
         RequestQueue requestQueue = requestQueueSingleton.getRequestQueue();
 
-        String url = BASE_URL;//+ DATASET_ID + "/resource/" + RESOURCE_ID + "/download/recurs.json";
+        String url = BASE_URL;//enlace del JSON
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -48,11 +48,8 @@ public class ApiClientEstatEstacions {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (listener != null) {
-                            listener.onSuccess(response);
-                            System.out.println(response);
-                            System.out.println("-----------------------------------------------");
-                            System.out.println(response.toString());
-                            procesarInformacion(response.toString());
+                            ArrayList<Estacion> estacionEStat = procesarInformacion(response.toString());
+                            listener.onSuccess(estacionEStat);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -67,39 +64,43 @@ public class ApiClientEstatEstacions {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                System.out.println("holiiiiiiiiiiiiiiiiiiiiiii");
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Authorization", TOKEN);
                 return headers;
             }
         };
-
         requestQueue.add(jsonObjectRequest);
     }
 
-    private static void procesarInformacion(String responseData) {
+    private static ArrayList<Estacion> procesarInformacion(String responseData) {
+        ArrayList<Estacion> estacionEStat = new ArrayList<Estacion>();
         try {
             JSONObject jsonObject = new JSONObject(responseData);
             JSONObject data = jsonObject.getJSONObject("data");
             JSONArray stations = data.getJSONArray("stations");
 
             for (int i = 0; i < stations.length(); i++) {
+
                 JSONObject station = stations.getJSONObject(i);
                 int stationId = station.getInt("station_id");
-                int bikesAvailable = station.getInt("num_bikes_available");
-                int mechanicalBikes = station.getJSONObject("num_bikes_available_types").getInt("mechanical");
-                int ebikes = station.getJSONObject("num_bikes_available_types").getInt("ebike");
-                int docksAvailable = station.getInt("num_docks_available");
+                int num_bikes_available = station.getInt("num_bikes_available");
+                int bikes_mechanical = station.getJSONObject("num_bikes_available_types").getInt("mechanical");
+                int bikes_ebike = station.getJSONObject("num_bikes_available_types").getInt("ebike");
+                int num_docks_available = station.getInt("num_docks_available");
+                int last_reported = station.getInt("last_reported");
+                boolean is_charging_station = station.getBoolean("is_charging_station");
                 String status = station.getString("status");
+                int is_installed = station.getInt("is_installed");
+                int is_renting = station.getInt("is_renting");
+                int is_returning = station.getInt("is_returning");
+                int traffic = station.getInt("traffic");
 
-                // Handle station information as needed
-                Log.d("Estación", "ID: " + stationId + ", Bicis disponibles: " + bikesAvailable
-                        + " (Mecánicas: " + mechanicalBikes + ", Eléctricas: " + ebikes
-                        + "), Docks disponibles: " + docksAvailable + ", Estado: " + status);
+                estacionEStat.add(new Estacion(stationId, num_bikes_available, bikes_mechanical, bikes_ebike, num_docks_available, last_reported, is_charging_station, status, is_installed, is_renting, is_returning, traffic));
             }
         } catch (Exception e) {
             // Handle exception
             e.printStackTrace();
         }
+        return estacionEStat;
     }
 }

@@ -29,10 +29,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.VolleyError;
 import com.example.dam2_m08_uf2_t1.R;
 import com.example.dam2_m08_uf2_t1.apis.ApiClientInfoEstacions;
-import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
+import com.example.dam2_m08_uf2_t1.modelo.Estacion;
 
 import com.example.dam2_m08_uf2_t1.apis.ApiClientEstatEstacions;
-import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
+import com.example.dam2_m08_uf2_t1.modelo.Estacion;
 import com.example.dam2_m08_uf2_t1.recyclerView.Adaptador;
 import com.example.dam2_m08_uf2_t1.recyclerView.RecyclerViewInterface;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private static final int MODE_FAVORITAS = 3;
 
     private MyLocationNewOverlay myLocationOverlay;
-    private ArrayList<EstacionEstat> estacionBicings;
+    private ArrayList<Estacion> estacionBicings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,8 +134,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private void EEsTADO(){
         ApiClientEstatEstacions.obtenerDatosEstatEstacions(getApplicationContext(), new ApiClientEstatEstacions.OnDataFetchedListener() {
             @Override
-            public void onSuccess(JSONObject response) {
-                // Handle success
+            public void onSuccess(ArrayList<Estacion> estacionEStat) {
+                // Ahora puedes usar el array de estaciones en tu actividad principal
+                estacionBicings = estacionEStat;
+                //llamar a la api client info
             }
 
             @Override
