@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.rv = this.findViewById(R.id.recyclerView);
 
         this.adaptador = new Adaptador(this, estacionBicings,this);
+        rv.setAdapter(adaptador);
+        rv.setLayoutManager(new LinearLayoutManager(this));
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&

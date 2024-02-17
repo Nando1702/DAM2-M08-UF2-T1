@@ -46,6 +46,11 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
     @Override
     public int getItemCount() {
+
+        if (listaEstaciones == null){
+            return 0;
+        }
+
         return listaEstaciones.size();
     }
 
