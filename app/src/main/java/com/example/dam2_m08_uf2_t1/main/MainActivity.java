@@ -428,6 +428,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaamarilla)); // Reemplaza con el drawable para estación abierta
         } else {
             SharedPref.removeFavoriteLocation(getApplicationContext(),estacion.getStationId());
+
+            if (mode == MODE_FAVORITAS){
+                stationMarker.remove(mapa);
+                auxEstacion.remove(estacion);
+                adaptador.setListaEstaciones(auxEstacion);
+            }
+
             if (estacion.getStatus().equals("IN_SERVICE")) {
                 stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
             } else {
