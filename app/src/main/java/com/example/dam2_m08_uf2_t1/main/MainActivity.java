@@ -375,6 +375,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     // Actualizar la distancia máxima con el valor ingresado por el usuario
                     maxDistance = Integer.parseInt(inputText);
                     // Aquí puedes utilizar el valor de maxDistance para filtrar las ubicaciones cercanas al usuario
+                    borrarMarcadoresMapa();
+                    filtrarDistanciaAuxEstacion(auxEstacion);
+                    crearMarcas(auxEstacion);
+                    adaptador.setListaEstaciones(auxEstacion);
                 }
             }
         });
