@@ -46,7 +46,8 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
         holder.textViewDireccion.setText(estacion.getAddress());
         holder.textViewEstado.setText(estacion.getStatus());
-        holder.textViewBicisDisponibles.setText("Bicis disponibles: " + estacion.getCapacity());
+        holder.textViewBicisEDisponibles.setText("Bicis electronicas disponibles: " + estacion.getBikes_ebike());
+        holder.textViewBicisMDisponibles.setText("Bicis mecanicas disponibles: " + estacion.getBikes_mechanical());
 
     }
 
@@ -69,15 +70,16 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
         TextView textViewDireccion;
         TextView textViewEstado;
-        TextView textViewBicisDisponibles;
+        TextView textViewBicisEDisponibles;
+        TextView textViewBicisMDisponibles;
 
         public MyViewHolder(@NonNull View itemView, RecyclerViewInterface rvi) {
             super(itemView);
 
             textViewDireccion = itemView.findViewById(R.id.textViewDireccion);
             textViewEstado = itemView.findViewById(R.id.textViewEstado);
-            textViewBicisDisponibles = itemView.findViewById(R.id.textViewBicisDisponibles);
-
+            textViewBicisMDisponibles = itemView.findViewById(R.id.textViewBicisMDisponibles);
+            textViewBicisEDisponibles = itemView.findViewById(R.id.textViewBicisEDisponibles);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

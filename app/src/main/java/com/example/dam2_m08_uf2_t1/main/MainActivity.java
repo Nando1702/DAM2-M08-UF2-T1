@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             @Override
             public void onError(VolleyError error) {
                 // Manejar el error si es necesario
-              //  System.out.println("hola2");
                 System.out.println(error);
             }
         });
@@ -315,17 +314,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         Marker stationMarker = new Marker(mapa);
         stationMarker.setPosition(new GeoPoint(estacion.getLat(), estacion.getLon()));
 
-        if (estacion.isFavorite()) {
-            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaamarilla)); // Reemplaza con el drawable para estación abierta
-        } else {
-            if (estacion.getStatus().equals("IN_SERVICE")) {
-                stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
-            } else {
-                stationMarker.setIcon(getResources().getDrawable(R.drawable.marcanegra)); // Reemplaza con el drawable para estación cerrada
-            }
-        }
+        colorMarcaEstacion(estacion, stationMarker);
+
         mapa.getOverlays().add(stationMarker);
 
+        Marker finalStationMarker = stationMarker;
         stationMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker, MapView mapView) {
@@ -336,14 +329,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 mapController.animateTo(stationPosition, 18.0, 1000L);
 
                 // Mostrar detalles de la estación en el mapa
-                showStationDetails(estacion);
+                showStationDetails(estacion, finalStationMarker);
 
                 return true;
             }
         });
 
     }
-    private void showStationDetails(Estacion estacion) {
+    private void showStationDetails(Estacion estacion, Marker stationMarker) {
         // Crear un cuadro de diálogo o vista emergente para mostrar los detalles de la estación
         // Aquí puedes utilizar un cuadro de diálogo personalizado o una vista emergente según tus necesidades
         // Debes mostrar: tipo de estación, bicis disponibles, estado (abierto/cerrado), dirección
@@ -352,7 +345,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         // Ejemplo de cuadro de diálogo simple
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Detalles de la estación");
-        builder.setMessage("Bicis electronicas disponibles: " + estacion.getBikes_ebike()+ "\n"
+        builder.setMessage("Nombre de la estación: " + estacion.getName()+ "\n"
+                + "Bicis electronicas disponibles: " + estacion.getBikes_ebike()+ "\n"
                 + "Bicis mecanicas disponibles: " + estacion.getBikes_mechanical()+ "\n"
                 + "Estado: " + (estacion.getStatus().equals("IN_SERVICE") ? "Abierto" : "Cerrado") + "\n"
                 + "Dirección: " + estacion.getAddress());
@@ -375,12 +369,31 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 dialog.dismiss();
             }
         });
+        builder.setNeutralButton((estacion.isFavorite()!=true? "✩" : "★"), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Abrir la actividad DetalleEstacionActivity con información completa
+                estacion.setFavorite(!estacion.isFavorite());
+                colorMarcaEstacion(estacion, stationMarker);
+
+            }
+        });
 
         // Mostrar el cuadro de diálogo
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
+    private void colorMarcaEstacion(Estacion estacion, Marker stationMarker){
+        if (estacion.isFavorite()) {
+            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaamarilla)); // Reemplaza con el drawable para estación abierta
+        } else {
+            if (estacion.getStatus().equals("IN_SERVICE")) {
+                stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
+            } else {
+                stationMarker.setIcon(getResources().getDrawable(R.drawable.marcanegra)); // Reemplaza con el drawable para estación cerrada
+            }
+        }
+    }
     private void borrarMarcadoresMapa() {
 
         mapa.getOverlays().clear();
