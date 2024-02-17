@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        System.out.println("hola");
-        EEsTADO();
+        obtenerEstatEstacions();//ehhh activa las apis y lo guarda_Todo en estacionBicings X_X ------------------------ferb lo nuevo :D----------------
+
         isMap = true;
 
 
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
 
-        //this.adaptador = new Adaptador(this, /*EEsTADO()*/null ,this);
+        this.adaptador = new Adaptador(this, estacionBicings ,this);//hay q cambiar cosas en el adaptador
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -131,13 +131,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         }
     }
 
-    private void EEsTADO(){
+    private void obtenerEstatEstacions(){
         ApiClientEstatEstacions.obtenerDatosEstatEstacions(getApplicationContext(), new ApiClientEstatEstacions.OnDataFetchedListener() {
             @Override
-            public void onSuccess(ArrayList<Estacion> estacionEStat) {
+            public void onSuccess(ArrayList<Estacion> estacionEstat) {
                 // Ahora puedes usar el array de estaciones en tu actividad principal
-                estacionBicings = estacionEStat;
-                //llamar a la api client info
+                //estacionBicings = estacionEstat;
+                obtenerinfoEstacions(estacionEstat);//llamar a la api client info
             }
 
             @Override
@@ -147,7 +147,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         });
 
     }
+    private void obtenerinfoEstacions(ArrayList<Estacion> estacionEstat) {
+        ApiClientInfoEstacions.obtenerDatosinfoEstacions(getApplicationContext(), estacionEstat, new ApiClientInfoEstacions.OnDataFetchedListener() {
+            @Override
+            public void onSuccess(ArrayList<Estacion> estacionesInfo) {
+                // Manejar el éxito si es necesario
+                estacionBicings = estacionesInfo;
+            }
 
+            @Override
+            public void onError(VolleyError error) {
+                // Manejar el error si es necesario
+            }
+        });
+    }
 
 
     @Override

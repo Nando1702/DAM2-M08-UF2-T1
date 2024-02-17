@@ -41,8 +41,7 @@ public class ApiClientInfoEstacions {
 
     private static RequestQueueSingleton requestQueueSingleton;
 
-    public static void obtenerDatosEstatEstacions(Context context,
-                                                  ApiClientEstatEstacions.OnDataFetchedListener listener) {
+    public static void obtenerDatosinfoEstacions(Context context,ArrayList<Estacion> estacionesEstat, OnDataFetchedListener listener) {
         if (requestQueueSingleton == null) {
             requestQueueSingleton = RequestQueueSingleton.getInstance(context);
         }
@@ -57,9 +56,10 @@ public class ApiClientInfoEstacions {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (listener != null) {
-                            ArrayList<Estacion> estacionEStat = procesarInformacion(response.toString());
-                            listener.onSuccess(estacionEStat);
+                            ArrayList<Estacion> estacionInfo = procesarInformacion(response.toString(),estacionesEstat);
+                            listener.onSuccess(estacionInfo);
                         }
+
                     }
                 }, new Response.ErrorListener() {
 
@@ -81,8 +81,8 @@ public class ApiClientInfoEstacions {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private static ArrayList<Estacion> procesarInformacion(String responseData) {
-        ArrayList<Estacion> estacionEStat = new ArrayList<Estacion>();
+    private static ArrayList<Estacion> procesarInformacion(String responseData,ArrayList<Estacion> estacionesEstat) {
+        ArrayList<Estacion> estacionInfo = new ArrayList<Estacion>();
         try {
             JSONObject jsonObject = new JSONObject(responseData);
             JSONObject data = jsonObject.getJSONObject("data");
@@ -105,10 +105,20 @@ public class ApiClientInfoEstacions {
                 boolean _ride_code_support = station.getBoolean("_ride_code_support");
                 int rental_uris = station.getInt("rental_uris");
 
-                for (Estacion e : estacionEStat){
+                for (Estacion e : estacionesEstat){
                     if (e.getStationId() == stationId ){
                         e.setName(name);
-                        //...
+                        e.setPhysicalConfiguration(physical_configuration);
+                        e.setLat(lat);
+                        e.setLon(lon);
+                        e.setAltitude(altitude);
+                        e.setAddress(address);
+                        e.setPostCode(post_code);
+                        e.setCapacity(capacity);
+                        //e.setIs_charging_station(is_charging_station);//creo q no hace falta pq ya esta en el estat
+                        e.setNearbyDistance(nearby_distance);
+                        e.setRideCodeSupport(_ride_code_support);
+                        e.setRentalUris(rental_uris);
                         break;
                     }
                 }
@@ -117,6 +127,6 @@ public class ApiClientInfoEstacions {
             // Handle exception
             e.printStackTrace();
         }
-        return estacionEStat;
+        return estacionesEstat;
     }
 }

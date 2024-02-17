@@ -10,17 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dam2_m08_uf2_t1.R;
-import com.example.dam2_m08_uf2_t1.modelo.EstacionEstat;
+import com.example.dam2_m08_uf2_t1.modelo.Estacion;
 
 import java.util.List;
 
 public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
     private Context context;
-    private List<EstacionEstat> listaEstaciones;
+    private List<Estacion> listaEstaciones;
     private RecyclerViewInterface rvi;
 
-    public Adaptador(Context context, List<EstacionEstat> listaEstaciones, RecyclerViewInterface rvi) {
+    public Adaptador(Context context, List<Estacion> listaEstaciones, RecyclerViewInterface rvi) {
         this.context = context;
         this.listaEstaciones = listaEstaciones;
         this.rvi = rvi;
@@ -36,10 +36,10 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        EstacionEstat estacion = listaEstaciones.get(position);
+        Estacion estacion = listaEstaciones.get(position);
 
         // Asigna los valores a los TextView
-        holder.textViewDireccion.setText(estacion.getDireccion());
+        holder.textViewDireccion.setText(estacion.getDireccion());//es getadrres son cosas diferentes y tal hay cosas nuevas ;_;
         holder.textViewEstado.setText(estacion.getEstado());
         holder.textViewBicisDisponibles.setText("Bicis disponibles: " + estacion.getCapacidad());
     }
