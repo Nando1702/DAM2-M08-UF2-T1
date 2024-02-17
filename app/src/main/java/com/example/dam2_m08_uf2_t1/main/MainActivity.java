@@ -236,6 +236,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 cargarMapa();
                 auxEstacionAbiertos();
 
+                if (filtDistancia){
+                    filtrarDistanciaAuxEstacion(auxEstacion);
+                }
+
                 adaptador.setListaEstaciones(auxEstacion);
                 crearMarcas(auxEstacion);
 
@@ -252,6 +256,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
                 auxEstacionFaboritos();
 
+                if (filtDistancia){
+                    filtrarDistanciaAuxEstacion(auxEstacion);
+                }
+
                 adaptador.setListaEstaciones(auxEstacion);
                 crearMarcas(auxEstacion);
                 adaptador.setListaEstaciones(auxEstacion);
@@ -262,11 +270,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         } else if (num == R.id.item4) {
 
             if (mode != MODE_MEZCLADO) {
+
                 auxEstacion = estacionBicings;
                 mode = MODE_MEZCLADO;
                 borrarMarcadoresMapa();
                 cargarMapa();
 
+
+                if (filtDistancia){
+                    filtrarDistanciaAuxEstacion(auxEstacion);
+                }
                 crearMarcas(estacionBicings);
                 adaptador.setListaEstaciones(estacionBicings);
             }
@@ -282,7 +295,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
             if (filtDistancia) {
 
-                filtrarDistanciaAuxEstacion(auxEstacion);
+                if (auxEstacion == null){
+
+                    auxEstacion = estacionBicings;
+
+                }
+
+                filtrarDistanciaAuxEstacion(estacionBicings);
 
             } else {
 
@@ -313,6 +332,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
 
     private void filtrarDistanciaAuxEstacion(ArrayList<Estacion> estacions) {
+
+        auxEstacion.clear();
 
         double lat = myLocationOverlay.getMyLocation().getLatitude();
         double lon = myLocationOverlay.getMyLocation().getLongitude();
@@ -574,6 +595,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         Location location2 = new Location("");
         location2.setLatitude(lat2);
         location2.setLongitude(lon2);
+
+        System.out.println(location1.distanceTo(location2));
 
         return location1.distanceTo(location2);
     }
