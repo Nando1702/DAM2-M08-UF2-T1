@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     adaptador.setListaEstaciones(estacionBicings);
                     arrayLleno = true;
 
-                    crearMarcas();
+                    crearMarcas(estacionBicings);
 
             }
 
@@ -219,6 +219,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
                 mode = MODE_ABIERTO;
                 borrarMarcadoresMapa();
+                cargarMapa();
+
+                for (Estacion est : estacionBicings) {
+
+                    if (est.getStatus().equals("IM_SERVICE")) {
+                        auxEstacion.add(est);
+                    }
+
+                }
+
+                adaptador.setListaEstaciones(auxEstacion);
+                crearMarcas(auxEstacion);
 
 
             }
@@ -230,11 +242,37 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
                 mode = MODE_FAVORITAS;
                 borrarMarcadoresMapa();
+                cargarMapa();
+
+                for (Estacion est : estacionBicings) {
+
+                    if (est.isFavorite()) {
+                        auxEstacion.add(est);
+                    }
+                }
+
+                adaptador.setListaEstaciones(auxEstacion);
+                crearMarcas(auxEstacion);
 
             }
 
 
         } else if (num == R.id.item4) {
+
+            if (mode != MODE_MEZCLADO) {
+
+                mode = MODE_MEZCLADO;
+                borrarMarcadoresMapa();
+                cargarMapa();
+
+                crearMarcas(estacionBicings);
+                adaptador.setListaEstaciones(estacionBicings);
+
+
+            }
+
+
+        } else if (num == R.id.item5) {
 
             if (mode != MODE_DISTANCIA) {
 
@@ -244,22 +282,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             }
 
 
-        } else if (num == R.id.item5) {
-
-            if (mode != MODE_MEZCLADO) {
-
-                mode = MODE_MEZCLADO;
-                borrarMarcadoresMapa();
-
-            }
-
         } else {
-
 
             return super.onOptionsItemSelected(item);
         }
 
         return true;
+
     }
 
     public void botonListMap(View view) {
@@ -291,6 +320,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     @Override
     public void onItemCLick(int position) {
+
+
 
     }
 
@@ -390,9 +421,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     }
 
-    private void crearMarcas(){
+    private void crearMarcas(ArrayList<Estacion> estacions){
 
-        for (Estacion est: estacionBicings) {
+        for (Estacion est: estacions) {
 
             addStationMarker(est);
 
