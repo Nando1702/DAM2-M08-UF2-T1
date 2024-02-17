@@ -100,13 +100,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
       //  System.out.println(estacionBicings);
 
 
-
-        addStationMarker(41.3851, 2.1734, true,false);
-
-        addStationMarker(41.3851, 2.1740, false,false);
-
-        addStationMarker(41.3849, 2.1744,false,true);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -316,14 +309,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     }
 
-    private void addStationMarker(double latitude, double longitude, boolean isOpen, boolean isFavorite) {
+    private void addStationMarker(Estacion estacion) {
         Marker stationMarker = new Marker(mapa);
-        stationMarker.setPosition(new GeoPoint(latitude, longitude));
+        stationMarker.setPosition(new GeoPoint(estacion.getLat(), estacion.getLon()));
 
-        if (isFavorite) {
+        if (estacion.isFavorite()) {
             stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaamarilla)); // Reemplaza con el drawable para estación abierta
         } else {
-            if (isOpen) {
+            if (estacion.getStatus().equals("IN_SERVICE")) {
                 stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
             } else {
                 stationMarker.setIcon(getResources().getDrawable(R.drawable.marcanegra)); // Reemplaza con el drawable para estación cerrada
@@ -338,9 +331,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 Intent intent = new Intent(MainActivity.this, Ubicacion.class);
 
                 // Agregar cualquier dato adicional que desees pasar a la actividad
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("longitude", longitude);
-                intent.putExtra("isOpen", isOpen);
+                intent.putExtra("estacion",estacion);
 
                 // Iniciar la actividad
                 startActivity(intent);
@@ -363,8 +354,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         for (Estacion est: estacionBicings) {
 
-            addStationMarker(est.getLat(),est.getLon(),est.getStatus().equals("IN_SERVICE"),false);
-
+            addStationMarker(est);
 
         }
     }

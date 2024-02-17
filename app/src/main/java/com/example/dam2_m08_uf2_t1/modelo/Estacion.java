@@ -1,6 +1,8 @@
 package com.example.dam2_m08_uf2_t1.modelo;
 
-public class Estacion{
+import java.io.Serializable;
+
+public class Estacion implements Serializable {
     //Estat
     private int stationId;
     private int num_bikes_available;
@@ -15,6 +17,7 @@ public class Estacion{
     private int is_returning;
     private int traffic;//trafic null?
 
+    private boolean isFavorite;
 
     //info esto con seters
     private String name;
@@ -240,6 +243,14 @@ public class Estacion{
 
     public void setRentalUris(Object rentalUris) {
         this.rentalUris = rentalUris;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     @Override
