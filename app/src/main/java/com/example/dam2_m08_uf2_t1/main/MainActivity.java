@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
 
-        //this.adaptador = new Adaptador(this, /*EEsTADO()*/null ,this);
+        this.adaptador = new Adaptador(this, estacionBicings,this);
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
