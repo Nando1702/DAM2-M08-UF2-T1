@@ -10,10 +10,13 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -68,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private static final int MODE_MEZCLADO = 0;
     private static final int MODE_ABIERTO = 1;
     private static final int MODE_FAVORITAS = 2;
-    private static final int MODE_DISTANCIA = 3;
+    private boolean filtDistancia = false;
     private MyLocationNewOverlay myLocationOverlay;
     private ArrayList<Estacion> estacionBicings;
     private ArrayList<Estacion> auxEstacion;
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private boolean arrayLleno = false;
 
     private Set<Integer> ubicacionesFavoritasId;
+    private int maxDistance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         obtenerEstatEstacions();//ehhh activa las apis y lo guarda_Todo en estacionBicings X_X ------------------------ferb lo nuevo :D----------------
         isMap = true;
-
 
 
         ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
 
-      //  System.out.println(estacionBicings);
+        //  System.out.println(estacionBicings);
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         cargarMapa();
 
-        this.adaptador = new Adaptador(this, estacionBicings ,this);//hay q cambiar cosas en el adaptador
+        this.adaptador = new Adaptador(this, estacionBicings, this);//hay q cambiar cosas en el adaptador
         rv.setAdapter(adaptador);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
@@ -153,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
 
 
-    private void obtenerEstatEstacions(){
+    private void obtenerEstatEstacions() {
 
         ApiClientEstatEstacions.obtenerDatosEstatEstacions(getApplicationContext(), new ApiClientEstatEstacions.OnDataFetchedListener() {
             @Override
@@ -173,19 +176,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         });
 
     }
+
     private void obtenerinfoEstacions(ArrayList<Estacion> estacionEstat) {
         ApiClientInfoEstacions.obtenerDatosinfoEstacions(getApplicationContext(), estacionEstat, new ApiClientInfoEstacions.OnDataFetchedListener() {
             @Override
             public void onSuccess(ArrayList<Estacion> estacionesInfo) {
 
-                    // Manipular la lista estacionBicings dentro de este bloque synchronized
-                    estacionBicings = estacionesInfo;
-                    adaptador.setListaEstaciones(estacionBicings);
-                    arrayLleno = true;
+                // Manipular la lista estacionBicings dentro de este bloque synchronized
+                estacionBicings = estacionesInfo;
+                adaptador.setListaEstaciones(estacionBicings);
+                arrayLleno = true;
 
-                    getfavoritesPref();
-                    crearMarcas(estacionBicings);
-                    
+                getfavoritesPref();
+                crearMarcas(estacionBicings);
+
             }
 
             @Override
@@ -223,18 +227,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         } else if (num == R.id.item2) {
 
             if (mode != MODE_ABIERTO) {
-
                 mode = MODE_ABIERTO;
                 borrarMarcadoresMapa();
                 cargarMapa();
-
-                for (Estacion est : estacionBicings) {
-
-                    if (est.getStatus().equals("IN_SERVICE")) {
-                        auxEstacion.add(est);
-                    }
-
-                }
+                auxEstacionAbiertos();
 
                 adaptador.setListaEstaciones(auxEstacion);
                 crearMarcas(auxEstacion);
@@ -246,20 +242,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         } else if (num == R.id.item3) {
 
             if (mode != MODE_FAVORITAS) {
-
                 mode = MODE_FAVORITAS;
                 borrarMarcadoresMapa();
                 cargarMapa();
 
-                for (Estacion est : estacionBicings) {
-
-                    if (est.isFavorite()) {
-                        auxEstacion.add(est);
-                    }
-                }
+                auxEstacionFaboritos();
 
                 adaptador.setListaEstaciones(auxEstacion);
                 crearMarcas(auxEstacion);
+                adaptador.setListaEstaciones(auxEstacion);
 
             }
 
@@ -267,27 +258,43 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         } else if (num == R.id.item4) {
 
             if (mode != MODE_MEZCLADO) {
-
+                auxEstacion = estacionBicings;
                 mode = MODE_MEZCLADO;
                 borrarMarcadoresMapa();
                 cargarMapa();
 
                 crearMarcas(estacionBicings);
                 adaptador.setListaEstaciones(estacionBicings);
-
-
             }
 
 
         } else if (num == R.id.item5) {
 
-            if (mode != MODE_DISTANCIA) {
+            filtDistancia = !filtDistancia;
+            borrarMarcadoresMapa();
+            cargarMapa();
 
-                mode = MODE_DISTANCIA;
-                borrarMarcadoresMapa();
+            if (filtDistancia) {
 
+                filtrarDistanciaAuxEstacion(auxEstacion);
+
+            } else {
+
+                if (mode == MODE_MEZCLADO) {
+                    auxEstacion = estacionBicings;
+                } else if (mode == MODE_FAVORITAS) {
+                    auxEstacionFaboritos();
+                } else if (mode == MODE_ABIERTO) {
+                    auxEstacionAbiertos();
+                }
             }
 
+            crearMarcas(auxEstacion);
+
+
+        } else if (num == R.id.item6) {
+
+            mostrarDialogoDistanciaMaxima();
 
         } else {
 
@@ -298,9 +305,82 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     }
 
+    private void filtrarDistanciaAuxEstacion(ArrayList<Estacion> estacions) {
+
+        double lat = myLocationOverlay.getMyLocation().getLatitude();
+        double lon = myLocationOverlay.getMyLocation().getLongitude();
+
+        for (Estacion est : estacions) {
+
+            if (calcularDistancia(lat, lon, est.getLat(), est.getLon()) < maxDistance) {
+
+                auxEstacion.add(est);
+            }
+        }
+
+    }
+
+    private void auxEstacionAbiertos() {
+
+        auxEstacion.clear();
+
+        for (Estacion est : estacionBicings) {
+
+            if (est.isFavorite()) {
+                auxEstacion.add(est);
+            }
+        }
+    }
+
+    private void mostrarDialogoDistanciaMaxima() {
+        // Crear un EditText para que el usuario ingrese la distancia máxima
+        final EditText input = new EditText(MainActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER); // Asegurar que solo se permitan números
+
+        // Crear el cuadro de diálogo
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Configurar distancia máxima (metros)");
+        builder.setView(input);
+
+        // Agregar botones "Aceptar" y "Cancelar" al cuadro de diálogo
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String inputText = input.getText().toString();
+                if (!inputText.isEmpty()) {
+                    // Actualizar la distancia máxima con el valor ingresado por el usuario
+                    maxDistance = Integer.parseInt(inputText);
+                    // Aquí puedes utilizar el valor de maxDistance para filtrar las ubicaciones cercanas al usuario
+                }
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Mostrar el cuadro de diálogo
+        builder.show();
+    }
+
     public void botonListMap(View view) {
 
         cambiarListaMap();
+
+    }
+
+    private void auxEstacionFaboritos() {
+
+        auxEstacion.clear();
+
+        for (Estacion est : estacionBicings) {
+
+            if (est.isFavorite()) {
+                auxEstacion.add(est);
+            }
+        }
 
     }
 
@@ -327,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     @Override
     public void onItemCLick(int position) {
-
 
 
     }
@@ -375,6 +454,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         });
 
     }
+
     private void showStationDetails(Estacion estacion, Marker stationMarker) {
         // Crear un cuadro de diálogo o vista emergente para mostrar los detalles de la estación
         // Aquí puedes utilizar un cuadro de diálogo personalizado o una vista emergente según tus necesidades
@@ -384,9 +464,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         // Ejemplo de cuadro de diálogo simple
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Detalles de la estación");
-        builder.setMessage("Nombre de la estación: " + estacion.getName()+ "\n"
-                + "Bicis electronicas disponibles: " + estacion.getBikes_ebike()+ "\n"
-                + "Bicis mecanicas disponibles: " + estacion.getBikes_mechanical()+ "\n"
+        builder.setMessage("Nombre de la estación: " + estacion.getName() + "\n"
+                + "Bicis electronicas disponibles: " + estacion.getBikes_ebike() + "\n"
+                + "Bicis mecanicas disponibles: " + estacion.getBikes_mechanical() + "\n"
                 + "Estado: " + (estacion.getStatus().equals("IN_SERVICE") ? "Abierto" : "Cerrado") + "\n"
                 + "Dirección: " + estacion.getAddress());
 
@@ -408,7 +488,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 dialog.dismiss();
             }
         });
-        builder.setNeutralButton((estacion.isFavorite()!=true? "✩" : "★"), new DialogInterface.OnClickListener() {
+        builder.setNeutralButton((estacion.isFavorite() != true ? "✩" : "★"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Abrir la actividad DetalleEstacionActivity con información completa
@@ -422,14 +502,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    private void colorMarcaEstacion(Estacion estacion, Marker stationMarker){
+
+    private void colorMarcaEstacion(Estacion estacion, Marker stationMarker) {
         if (estacion.isFavorite()) {
-            SharedPref.addFavoriteLocation(getApplicationContext(),estacion.getStationId());
+            SharedPref.addFavoriteLocation(getApplicationContext(), estacion.getStationId());
             stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaamarilla)); // Reemplaza con el drawable para estación abierta
         } else {
-            SharedPref.removeFavoriteLocation(getApplicationContext(),estacion.getStationId());
+            SharedPref.removeFavoriteLocation(getApplicationContext(), estacion.getStationId());
 
-            if (mode == MODE_FAVORITAS){
+            if (mode == MODE_FAVORITAS) {
                 stationMarker.remove(mapa);
                 auxEstacion.remove(estacion);
                 adaptador.setListaEstaciones(auxEstacion);
@@ -442,6 +523,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             }
         }
     }
+
     private void borrarMarcadoresMapa() {
 
         mapa.getOverlays().clear();
@@ -451,19 +533,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     }
 
-    private void crearMarcas(ArrayList<Estacion> estacions){
+    private void crearMarcas(ArrayList<Estacion> estacions) {
 
-        for (Estacion est: estacions) {
+        for (Estacion est : estacions) {
 
             addStationMarker(est);
 
         }
     }
 
-    private void getfavoritesPref(){
+    private void getfavoritesPref() {
 
-        for (Integer ubicacionesFavoritas: ubicacionesFavoritasId
-             ) {
+        for (Integer ubicacionesFavoritas : ubicacionesFavoritasId
+        ) {
 
             System.out.println(ubicacionesFavoritas);
 
