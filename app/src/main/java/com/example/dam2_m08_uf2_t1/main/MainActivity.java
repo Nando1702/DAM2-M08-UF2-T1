@@ -233,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             if (mode != MODE_ABIERTO) {
                 mode = MODE_ABIERTO;
                 borrarMarcadoresMapa();
-                cargarMapa();
                 auxEstacionAbiertos();
 
                 if (filtDistancia){
@@ -252,7 +251,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             if (mode != MODE_FAVORITAS) {
                 mode = MODE_FAVORITAS;
                 borrarMarcadoresMapa();
-                cargarMapa();
 
                 auxEstacionFaboritos();
 
@@ -274,7 +272,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 auxEstacion = estacionBicings;
                 mode = MODE_MEZCLADO;
                 borrarMarcadoresMapa();
-                cargarMapa();
 
 
                 if (filtDistancia){
@@ -291,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             m5.setChecked(filtDistancia);
 
             borrarMarcadoresMapa();
-            cargarMapa();
 
             if (filtDistancia) {
 
@@ -557,11 +553,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
 
     private void borrarMarcadoresMapa() {
-
         mapa.getOverlays().clear();
         mapa.invalidate();
 
+        // Vuelve a agregar el marcador de ubicación actual
+        if (myLocationOverlay != null) {
+            mapa.getOverlays().add(myLocationOverlay);
+        }
+
         cargarMapa();
+
 
     }
 
