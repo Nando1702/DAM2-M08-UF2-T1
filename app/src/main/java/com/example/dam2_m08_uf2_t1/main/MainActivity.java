@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 // Ahora puedes usar el array de estaciones en tu actividad principal
                 //estacionBicings = estacionEstat;
 
+
                 obtenerinfoEstacions(estacionEstat);//llamar a la api client info
             }
 
@@ -183,12 +184,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             public void onSuccess(ArrayList<Estacion> estacionesInfo) {
 
                 // Manipular la lista estacionBicings dentro de este bloque synchronized
+
                 estacionBicings = estacionesInfo;
                 adaptador.setListaEstaciones(estacionBicings);
                 arrayLleno = true;
+               // System.out.println(estacionBicings);
 
                 getfavoritesPref();
                 crearMarcas(estacionBicings);
+
+
 
             }
 
@@ -326,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         for (Estacion est : estacionBicings) {
 
-            if (est.isFavorite()) {
+            if (est.getStatus().equals("IN_SERVICE")) {
                 auxEstacion.add(est);
             }
         }
@@ -543,13 +548,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
 
     private void getfavoritesPref() {
-
-        for (Integer ubicacionesFavoritas : ubicacionesFavoritasId
-        ) {
-
-            System.out.println(ubicacionesFavoritas);
-
-        }
 
         for (Estacion est : estacionBicings) {
             if (ubicacionesFavoritasId.contains(est.getStationId())) {
