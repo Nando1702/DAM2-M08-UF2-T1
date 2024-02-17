@@ -51,6 +51,7 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
 
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private MenuItem m1;
     private boolean arrayLleno = false;
 
+    private Set<Integer> ubicacionesFavoritasId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,9 +86,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
 
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-
+        ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
         // Inicializar osmdroid
+
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
         // Configurar el directorio de caché (opcional)
@@ -178,8 +181,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     adaptador.setListaEstaciones(estacionBicings);
                     arrayLleno = true;
 
-                    crearMarcas();
-
+                    getfavoritesPref();
+                    crearMarcas(estacionBicings);
+                    
             }
 
             @Override
@@ -218,6 +222,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
                 mode = MODE_ABIERTO;
                 borrarMarcadoresMapa();
+                cargarMapa();
+
+                for (Estacion est : estacionBicings) {
+
+                    if (est.getStatus().equals("IM_SERVICE")) {
+                        auxEstacion.add(est);
+                    }
+
+                }
+
+                adaptador.setListaEstaciones(auxEstacion);
+                crearMarcas(auxEstacion);
 
 
             }
@@ -229,11 +245,37 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
                 mode = MODE_FAVORITAS;
                 borrarMarcadoresMapa();
+                cargarMapa();
+
+                for (Estacion est : estacionBicings) {
+
+                    if (est.isFavorite()) {
+                        auxEstacion.add(est);
+                    }
+                }
+
+                adaptador.setListaEstaciones(auxEstacion);
+                crearMarcas(auxEstacion);
 
             }
 
 
         } else if (num == R.id.item4) {
+
+            if (mode != MODE_MEZCLADO) {
+
+                mode = MODE_MEZCLADO;
+                borrarMarcadoresMapa();
+                cargarMapa();
+
+                crearMarcas(estacionBicings);
+                adaptador.setListaEstaciones(estacionBicings);
+
+
+            }
+
+
+        } else if (num == R.id.item5) {
 
             if (mode != MODE_DISTANCIA) {
 
@@ -243,22 +285,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             }
 
 
-        } else if (num == R.id.item5) {
-
-            if (mode != MODE_MEZCLADO) {
-
-                mode = MODE_MEZCLADO;
-                borrarMarcadoresMapa();
-
-            }
-
         } else {
-
 
             return super.onOptionsItemSelected(item);
         }
 
         return true;
+
     }
 
     public void botonListMap(View view) {
@@ -290,6 +323,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     @Override
     public void onItemCLick(int position) {
+
+
 
     }
 
@@ -385,8 +420,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
     private void colorMarcaEstacion(Estacion estacion, Marker stationMarker){
         if (estacion.isFavorite()) {
+            SharedPref.addFavoriteLocation(getApplicationContext(),estacion.getStationId());
             stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaamarilla)); // Reemplaza con el drawable para estación abierta
         } else {
+            SharedPref.removeFavoriteLocation(getApplicationContext(),estacion.getStationId());
             if (estacion.getStatus().equals("IN_SERVICE")) {
                 stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
             } else {
@@ -403,13 +440,25 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     }
 
-    private void crearMarcas(){
+    private void crearMarcas(ArrayList<Estacion> estacions){
 
-        for (Estacion est: estacionBicings) {
+        for (Estacion est: estacions) {
 
             addStationMarker(est);
 
         }
+    }
+
+    private void getfavoritesPref(){
+
+        for (Estacion est : estacionBicings) {
+            if (ubicacionesFavoritasId.contains(est.getStationId())) {
+                est.setFavorite(true);
+            } else {
+                est.setFavorite(false);
+            }
+        }
+
     }
 
 }
