@@ -48,6 +48,7 @@ public class Estacion implements Serializable {
         this.is_renting = is_renting;
         this.is_returning = is_returning;
         this.traffic = traffic;
+        this.isFavorite = false;
     }
 
 
