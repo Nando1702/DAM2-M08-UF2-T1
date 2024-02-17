@@ -43,7 +43,7 @@
         android:onClick="botonListMap"
         android:src="@drawable/baseline_menu_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

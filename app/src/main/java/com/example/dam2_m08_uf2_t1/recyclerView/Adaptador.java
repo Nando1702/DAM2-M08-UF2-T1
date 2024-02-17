@@ -54,6 +54,10 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
         return listaEstaciones.size();
     }
 
+    public void setListaEstaciones(List<Estacion> listaEstaciones) {
+        this.listaEstaciones = listaEstaciones;
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewDireccion;
