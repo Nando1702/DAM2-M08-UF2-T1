@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.example.dam2_m08_uf2_t1.R;
 
-public class Ubicacion extends AppCompatActivity {
+public class DetalleEstacionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

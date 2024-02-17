@@ -19,7 +19,7 @@
         android:theme="@style/Theme.DAM2M08UF2T1"
         tools:targetApi="31">
         <activity
-            android:name=".main.Ubicacion"
+            android:name=".main.DetalleEstacionActivity"
             android:exported="false" />
         <activity
             android:name=".main.MainActivity"

@@ -1,7 +1,9 @@
 package com.example.dam2_m08_uf2_t1.main;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -327,18 +329,56 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         stationMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker, MapView mapView) {
-                // Crear un Intent para abrir la actividad DetalleEstacionActivity
-                Intent intent = new Intent(MainActivity.this, Ubicacion.class);
+                // Obtener la posición de la estación
+                GeoPoint stationPosition = marker.getPosition();
 
-                // Agregar cualquier dato adicional que desees pasar a la actividad
-                intent.putExtra("estacion",estacion);
+                // Centrar el mapa en la posición de la estación con un zoom específico
+                mapController.animateTo(stationPosition, 18.0, 1000L);
 
-                // Iniciar la actividad
-                startActivity(intent);
+                // Mostrar detalles de la estación en el mapa
+                showStationDetails(estacion);
 
-                return true; // Devuelve true para indicar que el evento de clic ha sido manejado
+                return true;
             }
         });
+
+    }
+    private void showStationDetails(Estacion estacion) {
+        // Crear un cuadro de diálogo o vista emergente para mostrar los detalles de la estación
+        // Aquí puedes utilizar un cuadro de diálogo personalizado o una vista emergente según tus necesidades
+        // Debes mostrar: tipo de estación, bicis disponibles, estado (abierto/cerrado), dirección
+        // También incluir un botón que lleve a un nuevo activity con información completa
+
+        // Ejemplo de cuadro de diálogo simple
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Detalles de la estación");
+        builder.setMessage("Bicis electronicas disponibles: " + estacion.getBikes_ebike()+ "\n"
+                + "Bicis mecanicas disponibles: " + estacion.getBikes_mechanical()+ "\n"
+                + "Estado: " + (estacion.getStatus().equals("IN_SERVICE") ? "Abierto" : "Cerrado") + "\n"
+                + "Dirección: " + estacion.getAddress());
+
+        // Botón para ir a un nuevo activity
+        builder.setPositiveButton("Ver más", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Abrir la actividad DetalleEstacionActivity con información completa
+                Intent intent = new Intent(MainActivity.this, DetalleEstacionActivity.class);
+                intent.putExtra("estacion", estacion);
+                startActivity(intent);
+            }
+        });
+
+        // Botón para cerrar el cuadro de diálogo
+        builder.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Mostrar el cuadro de diálogo
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void borrarMarcadoresMapa() {
