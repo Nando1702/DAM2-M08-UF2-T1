@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     private MyLocationNewOverlay myLocationOverlay;
     private ArrayList<Estacion> estacionBicings;
+    private MenuItem m1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +112,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         locationRequest.setInterval(10000);
 
 
+       cargarMapa();
+
+    }
+
+    private void cargarMapa() {
+
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         // Establecer el proveedor de mapas (ejemplo: MAPNIK)
         this.mapController = (MapController) this.mapa.getController();
@@ -146,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             }
         });
 
+
     }
 
 
@@ -154,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+
+        m1 = menu.findItem(R.id.item1);
 
         return true;
     }
@@ -165,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         if (num == R.id.item1) {
 
+            cambiarListaMap();
 
 
         } else if (num == R.id.item2) {
@@ -189,11 +201,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     public void botonListMap(View view){
 
-        cambiarListaMap(view);
+        cambiarListaMap();
 
     }
-    private void cambiarListaMap(View view) {
+    private void cambiarListaMap() {
+
         FloatingActionButton button = findViewById(R.id.floating_button);
+
 
         this.isMap = !this.isMap;
 
@@ -201,10 +215,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             mapa.setVisibility(View.VISIBLE);
             rv.setVisibility(View.GONE);
             button.setImageResource(R.drawable.baseline_menu_24);
+            m1.setTitle("Lista");
+
         } else {
             mapa.setVisibility(View.GONE);
             rv.setVisibility(View.VISIBLE);
             button.setImageResource(R.drawable.baseline_map_24);
+            m1.setTitle("Mapa");
         }
     }
     @Override
@@ -259,6 +276,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 return true; // Devuelve true para indicar que el evento de clic ha sido manejado
             }
         });
+    }
+
+    private void borrarMarcadoresMapa(){
+
+        mapa.getOverlays().clear();
+        mapa.invalidate();
+
+        cargarMapa();
+
     }
 
 }
