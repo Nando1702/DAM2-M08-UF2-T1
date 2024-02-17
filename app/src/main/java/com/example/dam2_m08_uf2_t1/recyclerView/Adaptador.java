@@ -24,6 +24,9 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
         this.context = context;
         this.listaEstaciones = listaEstaciones;
         this.rvi = rvi;
+
+        System.out.println("adapt--");
+        System.out.println(listaEstaciones);
     }
 
     @NonNull
@@ -39,15 +42,12 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
         Estacion estacion = listaEstaciones.get(position);
 
         // Asigna los valores a los TextView
-/*
-        holder.textViewDireccion.setText(estacion.getDireccion());//es getadrres son cosas diferentes y tal hay cosas nuevas ;_;
-        holder.textViewEstado.setText(estacion.getEstado());
-        holder.textViewBicisDisponibles.setText("Bicis disponibles: " + estacion.getCapacidad());
+
 
         holder.textViewDireccion.setText(estacion.getAddress());
         holder.textViewEstado.setText(estacion.getStatus());
         holder.textViewBicisDisponibles.setText("Bicis disponibles: " + estacion.getCapacity());
-*/
+
     }
 
     @Override
@@ -62,6 +62,7 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
     public void setListaEstaciones(List<Estacion> listaEstaciones) {
         this.listaEstaciones = listaEstaciones;
+        notifyDataSetChanged();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

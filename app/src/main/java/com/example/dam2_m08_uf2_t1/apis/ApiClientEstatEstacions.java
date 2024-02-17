@@ -93,9 +93,17 @@ public class ApiClientEstatEstacions {
                 int is_installed = station.getInt("is_installed");
                 int is_renting = station.getInt("is_renting");
                 int is_returning = station.getInt("is_returning");
-                int traffic = station.getInt("traffic");
 
-                estacionEStat.add(new Estacion(stationId, num_bikes_available, bikes_mechanical, bikes_ebike, num_docks_available, last_reported, is_charging_station, status, is_installed, is_renting, is_returning, traffic));
+                int traffic = 0;
+
+                Estacion aux = new Estacion(stationId, num_bikes_available,
+                        bikes_mechanical, bikes_ebike,
+                        num_docks_available, last_reported,
+                        is_charging_station, status, is_installed,
+                        is_renting, is_returning, traffic);
+                // System.out.println(aux);
+
+                estacionEStat.add(aux);
             }
         } catch (Exception e) {
             // Handle exception

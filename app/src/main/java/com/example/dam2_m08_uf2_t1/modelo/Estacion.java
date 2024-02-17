@@ -242,5 +242,34 @@ public class Estacion{
         this.rentalUris = rentalUris;
     }
 
-    // Otros métodos si es necesario
+    @Override
+    public String toString() {
+        return "Estacion{" +
+                "stationId=" + stationId +
+                ", num_bikes_available=" + num_bikes_available +
+                ", bikes_mechanical=" + bikes_mechanical +
+                ", bikes_ebike=" + bikes_ebike +
+                ", num_docks_available=" + num_docks_available +
+                ", last_reported=" + last_reported +
+                ", is_charging_station=" + is_charging_station +
+                ", status='" + status + '\'' +
+                ", is_installed=" + is_installed +
+                ", is_renting=" + is_renting +
+                ", is_returning=" + is_returning +
+                ", traffic=" + traffic +
+                ", name='" + name + '\'' +
+                ", physicalConfiguration='" + physicalConfiguration + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", altitude=" + altitude +
+                ", address='" + address + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", capacity=" + capacity +
+                ", isChargingStation=" + isChargingStation +
+                ", nearbyDistance=" + nearbyDistance +
+                ", rideCodeSupport=" + rideCodeSupport +
+                ", rentalUris=" + rentalUris +
+                '}';
+    }
+// Otros métodos si es necesario
 }

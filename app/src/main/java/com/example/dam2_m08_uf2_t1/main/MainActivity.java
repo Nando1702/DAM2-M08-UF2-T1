@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -75,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         setContentView(R.layout.activity_main);
 
         obtenerEstatEstacions();//ehhh activa las apis y lo guarda_Todo en estacionBicings X_X ------------------------ferb lo nuevo :D----------------
-
         isMap = true;
+
 
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -95,11 +96,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapa = this.findViewById(R.id.mapa);
         this.rv = this.findViewById(R.id.recyclerView);
 
+      //  System.out.println(estacionBicings);
 
-        this.adaptador = new Adaptador(this, estacionBicings ,this);//hay q cambiar cosas en el adaptador
-
-        rv.setAdapter(adaptador);
-        rv.setLayoutManager(new LinearLayoutManager(this));
 
 
         addStationMarker(41.3851, 2.1734, true,false);
@@ -122,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
 
         cargarMapa();
+
+        this.adaptador = new Adaptador(this, estacionBicings ,this);//hay q cambiar cosas en el adaptador
+        rv.setAdapter(adaptador);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
 
@@ -156,11 +159,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             public void onSuccess(ArrayList<Estacion> estacionEstat) {
                 // Ahora puedes usar el array de estaciones en tu actividad principal
                 //estacionBicings = estacionEstat;
+
                 obtenerinfoEstacions(estacionEstat);//llamar a la api client info
             }
 
             @Override
             public void onError(VolleyError error) {
+
+
                 // Handle error
             }
         });
@@ -171,12 +177,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             @Override
             public void onSuccess(ArrayList<Estacion> estacionesInfo) {
                 // Manejar el éxito si es necesario
+                // System.out.println("Hola");
                 estacionBicings = estacionesInfo;
+
+                adaptador.setListaEstaciones(estacionBicings);
             }
 
             @Override
             public void onError(VolleyError error) {
                 // Manejar el error si es necesario
+              //  System.out.println("hola2");
+                System.out.println(error);
             }
         });
 

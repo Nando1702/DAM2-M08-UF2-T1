@@ -94,16 +94,18 @@ public class ApiClientInfoEstacions {
                 int stationId = station.getInt("station_id");
                 String name = station.getString("name");
                 String physical_configuration = station.getString("physical_configuration");
-                int lat = station.getInt("lat");
-                int lon = station.getInt("lon");
-                int altitude = station.getInt("altitude");
+                double lat = station.getDouble("lat");
+                double lon = station.getDouble("lon");
+                double altitude = station.getDouble("altitude");
                 String address = station.getString("address");
                 String post_code = station.getString("post_code");
                 int capacity = station.getInt("capacity");
                 //boolean is_charging_station = station.getBoolean("is_charging_station");//creo q no hace falta pq ya esta en el estat
-                int nearby_distance = station.getInt("nearby_distance");
+                double nearby_distance = station.getDouble("nearby_distance");
                 boolean _ride_code_support = station.getBoolean("_ride_code_support");
-                int rental_uris = station.getInt("rental_uris");
+
+                int rental_uris = 0; // Valor predeterminado
+
 
                 for (Estacion e : estacionesEstat){
                     if (e.getStationId() == stationId ){
@@ -119,6 +121,8 @@ public class ApiClientInfoEstacions {
                         e.setNearbyDistance(nearby_distance);
                         e.setRideCodeSupport(_ride_code_support);
                         e.setRentalUris(rental_uris);
+
+                      // System.out.println(e);
                         break;
                     }
                 }
