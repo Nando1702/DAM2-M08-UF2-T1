@@ -97,10 +97,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         rv.setAdapter(adaptador);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        addStationMarker(41.3851, 2.1734,true);
+        addStationMarker(41.3851, 2.1734, true,false);
 
-        addStationMarker(41.3851,2.1740, false);
+        addStationMarker(41.3851, 2.1740, false,false);
 
+        addStationMarker(41.3849, 2.1744,false,true);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -204,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         } else if (num == R.id.item4) {
 
-            if (mode != MODE_DISTANCIA){
+            if (mode != MODE_DISTANCIA) {
 
                 mode = MODE_DISTANCIA;
                 borrarMarcadoresMapa();
@@ -214,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         } else if (num == R.id.item5) {
 
-            if (mode != MODE_MEZCLADO){
+            if (mode != MODE_MEZCLADO) {
 
                 mode = MODE_MEZCLADO;
                 borrarMarcadoresMapa();
@@ -279,17 +280,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     }
 
-    private void addStationMarker(double latitude, double longitude, boolean isOpen) {
+    private void addStationMarker(double latitude, double longitude, boolean isOpen, boolean isFavorite) {
         Marker stationMarker = new Marker(mapa);
         stationMarker.setPosition(new GeoPoint(latitude, longitude));
 
-        // Seleccionar el drawable dependiendo de si la estación está abierta o cerrada
-        if (isOpen) {
-            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
+        if (isFavorite) {
+            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaamarilla)); // Reemplaza con el drawable para estación abierta
         } else {
-            stationMarker.setIcon(getResources().getDrawable(R.drawable.marcanegra)); // Reemplaza con el drawable para estación cerrada
+            if (isOpen) {
+                stationMarker.setIcon(getResources().getDrawable(R.drawable.marcaroja)); // Reemplaza con el drawable para estación abierta
+            } else {
+                stationMarker.setIcon(getResources().getDrawable(R.drawable.marcanegra)); // Reemplaza con el drawable para estación cerrada
+            }
         }
-
         mapa.getOverlays().add(stationMarker);
 
         stationMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
