@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        System.out.println("hola");
         EEsTADO();
         isMap = true;
 
@@ -87,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         Configuration.getInstance().setOsmdroidTileCache(getCacheDir());
         // Configurar otros ajustes de osmdroid si es necesario
 
-        setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -98,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.adaptador = new Adaptador(this, estacionBicings, this);
         rv.setAdapter(adaptador);
         rv.setLayoutManager(new LinearLayoutManager(this));
+
+        addStationMarker(41.3851, 2.1734,true);
+
+        addStationMarker(41.3851,2.1740, false);
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
