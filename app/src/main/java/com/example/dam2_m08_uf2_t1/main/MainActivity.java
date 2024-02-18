@@ -426,6 +426,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
        Estacion estacion = auxEstacion.get(position);
         estacion.setFavorite(!estacion.isFavorite());
         adaptador.setListaEstaciones(auxEstacion);
+        if (mode == MODE_FAVORITAS){
+            auxEstacionFaboritos();
+            adaptador.setListaEstaciones(auxEstacion);
+        }
+        borrarMarcadoresMapa();
+        crearMarcas(auxEstacion);
     }
 
     @Override
@@ -505,7 +511,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 // Abrir la actividad DetalleEstacionActivity con información completa
                 estacion.setFavorite(!estacion.isFavorite());
                 colorMarcaEstacion(estacion, stationMarker);
-
+                if (mode == MODE_FAVORITAS){
+                    auxEstacionFaboritos();
+                    adaptador.setListaEstaciones(auxEstacion);
+                }
+                borrarMarcadoresMapa();
+                crearMarcas(auxEstacion);
             }
         });
 
