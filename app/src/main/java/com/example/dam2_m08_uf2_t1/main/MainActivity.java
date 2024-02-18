@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         if (startPoint != null) {
             mapController.setCenter(startPoint);
+            
         }
     }
 
@@ -422,6 +423,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         adaptador.setListaEstaciones(auxEstacion);
         if (mode == MODE_FAVORITAS){
             auxEstacionFaboritos();
+            if (filtDistancia){
+                filtrarDistanciaAuxEstacion(auxEstacion);
+            }
             adaptador.setListaEstaciones(auxEstacion);
         }
         borrarMarcadoresMapa();
