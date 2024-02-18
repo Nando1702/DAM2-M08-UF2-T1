@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
         Configuration.getInstance().setOsmdroidTileCache(getCacheDir());
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -124,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     @Override
     protected void onPause() {
         super.onPause();
-        mapa.onPause();  // Pausar el mapa para liberar recursos
+        mapa.onPause();
+        // Pausar el mapa para liberar recursos
     }
 
     @Override

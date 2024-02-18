@@ -33,10 +33,10 @@ public class Estacion implements Serializable, Parcelable {
     private String address;
     private String postCode;
     private int capacity;
-    private boolean isChargingStation;//hay 2 de estos cual quitamos?
+    private boolean isChargingStation;
     private double nearbyDistance;
     private boolean rideCodeSupport;
-    private Object rentalUris; // Puedes ajustar el tipo según la estructura real
+    private Object rentalUris;
 
     private String refEstacionCercana;
     // Constructor
@@ -58,216 +58,98 @@ public class Estacion implements Serializable, Parcelable {
     }
 
 
-    // Getters y setters (puedes generarlos automáticamente en la mayoría de las IDEs)
-
+    // Getters y setters
     public int getNum_bikes_available() {
         return num_bikes_available;
     }
-
-    public void setNum_bikes_available(int num_bikes_available) {
-        this.num_bikes_available = num_bikes_available;
-    }
-
     public int getBikes_mechanical() {
         return bikes_mechanical;
     }
-
-    public void setBikes_mechanical(int bikes_mechanical) {
-        this.bikes_mechanical = bikes_mechanical;
-    }
-
     public int getBikes_ebike() {
         return bikes_ebike;
     }
-
-    public void setBikes_ebike(int bikes_ebike) {
-        this.bikes_ebike = bikes_ebike;
-    }
-
     public int getNum_docks_available() {
         return num_docks_available;
     }
-
-    public void setNum_docks_available(int num_docks_available) {
-        this.num_docks_available = num_docks_available;
-    }
-
     public int getLast_reported() {
         return last_reported;
     }
-
-    public void setLast_reported(int last_reported) {
-        this.last_reported = last_reported;
-    }
-
     public boolean isIs_charging_station() {
         return is_charging_station;
     }
-
-    public void setIs_charging_station(boolean is_charging_station) {
-        this.is_charging_station = is_charging_station;
-    }
-
     public String getStatus() {
         return status;
     }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getIs_installed() {
-        return is_installed;
-    }
-
-    public void setIs_installed(int is_installed) {
-        this.is_installed = is_installed;
-    }
-
-    public int getIs_renting() {
-        return is_renting;
-    }
-
-    public void setIs_renting(int is_renting) {
-        this.is_renting = is_renting;
-    }
-
-    public int getIs_returning() {
-        return is_returning;
-    }
-
-    public void setIs_returning(int is_returning) {
-        this.is_returning = is_returning;
-    }
-
-    public int getTraffic() {
-        return traffic;
-    }
-
-    public void setTraffic(int traffic) {
-        this.traffic = traffic;
-    }
-
     public int getStationId() {
         return stationId;
     }
-
-    public void setStationId(int stationId) {
-        this.stationId = stationId;
-    }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getPhysicalConfiguration() {
         return physicalConfiguration;
     }
-
     public void setPhysicalConfiguration(String physicalConfiguration) {
         this.physicalConfiguration = physicalConfiguration;
     }
-
     public double getLat() {
         return lat;
     }
-
     public void setLat(double lat) {
         this.lat = lat;
     }
-
     public double getLon() {
         return lon;
     }
-
     public void setLon(double lon) {
         this.lon = lon;
     }
-
     public double getAltitude() {
         return altitude;
     }
-
     public void setAltitude(double altitude) {
         this.altitude = altitude;
     }
-
     public String getAddress() {
         return address;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }
-
     public String getPostCode() {
         return postCode;
     }
-
     public void setPostCode(String postCode) {
         this.postCode = postCode;
     }
-
     public int getCapacity() {
         return capacity;
     }
-
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
-
-    public boolean isChargingStation() {
-        return isChargingStation;
-    }
-
-    public void setChargingStation(boolean chargingStation) {
-        isChargingStation = chargingStation;
-    }
-
-    public double getNearbyDistance() {
-        return nearbyDistance;
-    }
-
     public void setNearbyDistance(double nearbyDistance) {
         this.nearbyDistance = nearbyDistance;
     }
-
     public boolean isRideCodeSupport() {
         return rideCodeSupport;
     }
-
     public void setRideCodeSupport(boolean rideCodeSupport) {
         this.rideCodeSupport = rideCodeSupport;
     }
-
-    public Object getRentalUris() {
-        return rentalUris;
-    }
-
     public void setRentalUris(Object rentalUris) {
         this.rentalUris = rentalUris;
     }
-
     public boolean isFavorite() {
         return isFavorite;
     }
-
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
     }
-
-    public String getRefEstacionCercana() {
-        return refEstacionCercana;
-    }
-
-    public void setRefEstacionCercana(String refEstacionCercana) {
-        this.refEstacionCercana = refEstacionCercana;
-    }
-
+    // To String para hacer comprovaciones
     @Override
     public String toString() {
         return "Estacion{" +
@@ -297,12 +179,11 @@ public class Estacion implements Serializable, Parcelable {
                 ", rentalUris=" + rentalUris +
                 '}';
     }
-
     @Override
     public int describeContents() {
         return 0;
     }
-
+    // Escribe los valores de la estación en un Parcel para su serialización y paso entre procesos.
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(stationId);
@@ -329,10 +210,8 @@ public class Estacion implements Serializable, Parcelable {
         dest.writeByte((byte) (isChargingStation ? 1 : 0));
         dest.writeDouble(nearbyDistance);
         dest.writeByte((byte) (rideCodeSupport ? 1 : 0));
-        // Aquí puedes seguir escribiendo los demás campos en el Parcel
     }
-
-    // Constructor utilizado para crear un objeto Estacion a partir de un Parcel
+    // Constructor para crear una instancia de la clase Parcelable a partir de un Parcel.
     protected Estacion(Parcel in) {
         stationId = in.readInt();
         num_bikes_available = in.readInt();
@@ -358,20 +237,18 @@ public class Estacion implements Serializable, Parcelable {
         isChargingStation = in.readByte() != 0;
         nearbyDistance = in.readDouble();
         rideCodeSupport = in.readByte() != 0;
-        // Aquí puedes seguir leyendo los demás campos del Parcel
     }
-
-    // Implementación del Creator utilizado para crear instancias de Estacion a partir del Parcel
+    // crea instancias de la clase Parcelable a partir de un Parcel.
     public static final Creator<Estacion> CREATOR = new Creator<Estacion>() {
+        // Crea una nueva instancia de la clase Parcelable a partir del Parcel proporcionado.
         @Override
         public Estacion createFromParcel(Parcel in) {
             return new Estacion(in);
         }
-
+        // Crea un nuevo array de la clase Parcelable.
         @Override
         public Estacion[] newArray(int size) {
             return new Estacion[size];
         }
     };
-// Otros métodos si es necesario
 }

@@ -9,11 +9,9 @@ import java.util.Set;
 public class SharedPref {
     private static final String PREF_NAME = "BicingPrefs";
     private static final String KEY_FAVORITE_LOCATIONS = "favorite";
-
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
-
     public static void addFavoriteLocation(Context context, int locationId) {
         Log.d("SharedPref", "Adding location to favorites: " + locationId);
         Set<String> favoriteLocations = getFavoriteLocationsSet(context);
