@@ -19,10 +19,12 @@ import java.util.List;
 
 public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
+    // Atributos del Adaptador
     private Context context;
     private List<Estacion> listaEstaciones;
     private RecyclerViewInterface rvi;
 
+    // Constructor del Adaptador
     public Adaptador(Context context, List<Estacion> listaEstaciones, RecyclerViewInterface rvi) {
         this.context = context;
         this.listaEstaciones = listaEstaciones;
@@ -42,33 +44,32 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        // Obtiene la estación de la posición actual
         Estacion estacion = listaEstaciones.get(position);
 
-        // Asigna los valores a los TextView
-
-
+        // Asignar los valores a los TextView y el botón en MyViewHolder
         holder.textViewDireccion.setText(estacion.getAddress());
         holder.textViewEstado.setText(estacion.getStatus());
         holder.textViewBicisEDisponibles.setText("Bicis electronicas disponibles: " + estacion.getBikes_ebike());
         holder.textViewBicisMDisponibles.setText("Bicis mecanicas disponibles: " + estacion.getBikes_mechanical());
         holder.botonFav.setText(estacion.isFavorite() != true ? "✩" : "★");
 
+        // Establecer el color del Nombre segun si es Favorito/Abierto/Cerrado
         if (estacion.isFavorite()) {
             holder.textViewDireccion.setTextColor(Color.parseColor("#FFFF00")); // Reemplaza con el drawable para estación abierta
         } else {
-
             if (estacion.getStatus().equals("IN_SERVICE")) {
                 holder.textViewDireccion.setTextColor(Color.parseColor("#FFFF0000")); // Reemplaza con el drawable para estación abierta
             } else {
                 holder.textViewDireccion.setTextColor(Color.parseColor("#FF000000")); // Reemplaza con el drawable para estación cerrada
             }
         }
-        // Agregar acción al botón
+        // Agregar una acción al botón favorito
         holder.botonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Acción que deseas realizar al hacer clic en el botón
-                // Puedes acceder a la posición del elemento haciendo uso de "position"
+
+                // Llamar al método onButtonCLick de RecyclerViewInterface con la Posicion
                 if (rvi != null) {
                     rvi.onButtonCLick(position);
                 }
@@ -76,21 +77,22 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
         });
     }
 
+    // Devuelve el Tamaño de la lista
     @Override
     public int getItemCount() {
-
         if (listaEstaciones == null){
             return 0;
         }
-
         return listaEstaciones.size();
     }
 
+    // Setter para modificar la lista del adaptador, cuando la cambia notifica los cambios
     public void setListaEstaciones(List<Estacion> listaEstaciones) {
         this.listaEstaciones = listaEstaciones;
         notifyDataSetChanged();
     }
 
+    // MyViewHolder, cada elemento de la lista
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewDireccion;
@@ -99,14 +101,17 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
         TextView textViewBicisMDisponibles;
         Button botonFav;
 
+        // Constructor del MyViewHolder
         public MyViewHolder(@NonNull View itemView, RecyclerViewInterface rvi) {
             super(itemView);
 
+            // Enlaza los elementos de la vista con las variables correspondientes
             textViewDireccion = itemView.findViewById(R.id.textViewDireccion);
             textViewEstado = itemView.findViewById(R.id.textViewEstado);
             textViewBicisMDisponibles = itemView.findViewById(R.id.textViewBicisMDisponibles);
             textViewBicisEDisponibles = itemView.findViewById(R.id.textViewBicisEDisponibles);
             botonFav = itemView.findViewById(R.id.button2);
+            // Establecer un listener de clic para el elemento de la lista
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

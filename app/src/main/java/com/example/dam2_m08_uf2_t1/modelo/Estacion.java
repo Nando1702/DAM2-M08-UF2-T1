@@ -329,10 +329,7 @@ public class Estacion implements Serializable, Parcelable {
         dest.writeByte((byte) (isChargingStation ? 1 : 0));
         dest.writeDouble(nearbyDistance);
         dest.writeByte((byte) (rideCodeSupport ? 1 : 0));
-        // Aquí puedes seguir escribiendo los demás campos en el Parcel
     }
-
-    // Constructor utilizado para crear un objeto Estacion a partir de un Parcel
     protected Estacion(Parcel in) {
         stationId = in.readInt();
         num_bikes_available = in.readInt();
@@ -358,20 +355,15 @@ public class Estacion implements Serializable, Parcelable {
         isChargingStation = in.readByte() != 0;
         nearbyDistance = in.readDouble();
         rideCodeSupport = in.readByte() != 0;
-        // Aquí puedes seguir leyendo los demás campos del Parcel
     }
-
-    // Implementación del Creator utilizado para crear instancias de Estacion a partir del Parcel
     public static final Creator<Estacion> CREATOR = new Creator<Estacion>() {
         @Override
         public Estacion createFromParcel(Parcel in) {
             return new Estacion(in);
         }
-
         @Override
         public Estacion[] newArray(int size) {
             return new Estacion[size];
         }
     };
-// Otros métodos si es necesario
 }

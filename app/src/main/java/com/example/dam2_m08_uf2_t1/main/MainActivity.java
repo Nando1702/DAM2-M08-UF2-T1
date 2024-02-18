@@ -97,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
         // Configurar el directorio de caché (opcional)
         Configuration.getInstance().setOsmdroidTileCache(getCacheDir());
-        // Configurar otros ajustes de osmdroid si es necesario
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -136,7 +134,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     @Override
     protected void onPause() {
         super.onPause();
-        mapa.onPause();  // Pausar el mapa para liberar recursos
+        mapa.onPause();
+        // Pausar el mapa para liberar recursos
     }
 
     @Override
