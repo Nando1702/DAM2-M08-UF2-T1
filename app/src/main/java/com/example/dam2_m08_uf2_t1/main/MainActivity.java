@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private RecyclerView rv;
     private Adaptador adaptador;
     private boolean isMap;
-
     private static int mode = 0;
-
     private static final int MODE_MEZCLADO = 0;
     private static final int MODE_ABIERTO = 1;
     private static final int MODE_FAVORITAS = 2;
@@ -77,19 +75,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private ArrayList<Estacion> estacionBicings;
     private ArrayList<Estacion> auxEstacion;
     private MenuItem m1;
-
     private MenuItem m5;
     private boolean arrayLleno = false;
-
     private Set<Integer> ubicacionesFavoritasId;
     private float maxDistance = 1000000000;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        obtenerEstatEstacions();//ehhh activa las apis y lo guarda_Todo en estacionBicings X_X ------------------------ferb lo nuevo :D----------------
+        if (estacionBicings == null){
+            obtenerEstatEstacions();//ehhh activa las apis y lo guarda_Todo en estacionBicings X_X ------------------------ferb lo nuevo :D----------------
+        }
         isMap = true;
 
 
@@ -150,12 +147,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         super.onSaveInstanceState(outState);
         outState.putBoolean("isMap",isMap);
         outState.putParcelableArrayList("listaEstaciones", estacionBicings);
+        outState.putInt("mode",mode);
+        outState.putBoolean("isFiltDistance", filtDistancia);
+        outState.putFloat("distancia",maxDistance);
     }
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        isMap = savedInstanceState.getBoolean("isMap");
+        isMap = !savedInstanceState.getBoolean("isMap");
         estacionBicings = savedInstanceState.getParcelableArrayList("listaEstaciones");
+        mode = savedInstanceState.getInt("mode");
+        filtDistancia = savedInstanceState.getBoolean("isFiltDistance");
+        maxDistance = savedInstanceState.getFloat("distancia")
         cambiarListaMap();
     }
     private void cargarMapa() {
@@ -503,16 +506,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
 
     private void crearMarcas(ArrayList<Estacion> estacions) {
+        ArrayList<Estacion> copiaEstacions = new ArrayList<>(estacions);
 
-        for (Estacion est : estacions) {
-
+        for (Estacion est : copiaEstacions) {
             addStationMarker(est);
-
         }
     }
 
     private void getfavoritesPref() {
-
         for (Estacion est : estacionBicings) {
             if (ubicacionesFavoritasId.contains(est.getStationId())) {
                 est.setFavorite(true);
@@ -522,7 +523,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             }
         }
     }
-
     public static float calcularDistancia(double lat1, double lon1, double lat2, double lon2) {
         Location location1 = new Location("");
         location1.setLatitude(lat1);
@@ -550,5 +550,3 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         }
     }
 }
-
-
