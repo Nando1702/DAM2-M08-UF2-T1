@@ -111,7 +111,7 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
             textViewBicisMDisponibles = itemView.findViewById(R.id.textViewBicisMDisponibles);
             textViewBicisEDisponibles = itemView.findViewById(R.id.textViewBicisEDisponibles);
             botonFav = itemView.findViewById(R.id.button2);
-            // Establecer un listener de clic para el elemento de la lista
+            // Establecer un listener para cada elemento de la lista
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
