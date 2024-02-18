@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         estacionBicings = savedInstanceState.getParcelableArrayList("listaEstaciones");
         mode = savedInstanceState.getInt("mode");
         filtDistancia = savedInstanceState.getBoolean("isFiltDistance");
-        maxDistance = savedInstanceState.getFloat("distancia")
+        maxDistance = savedInstanceState.getFloat("distancia");
         cambiarListaMap();
     }
     private void cargarMapa() {
@@ -204,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     auxEstacion =estacionBicings;
                     getfavoritesPref();
                     crearMarcas(estacionBicings);
-                   // obtenerDistancias();
             }
             @Override
             public void onError(VolleyError error) {
@@ -386,8 +385,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     }
     @Override
     public void onItemCLick(int position) {
+        System.out.println("-------------estacionCercana1----------");
+        String estacionCercana = NomEstacionMasCercana(auxEstacion.get(position));
+        System.out.println(estacionCercana);
         Intent intent = new Intent(MainActivity.this, DetalleEstacionActivity.class);
-        intent.putExtra("estacion", auxEstacion.get(position).getRefEstacionCercana());
+        intent.putExtra("estacionMasCercana", estacionCercana);
         intent.putExtra("estacion", (Serializable) auxEstacion.get(position));
         startActivity(intent);
     }
@@ -442,7 +444,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Abrir la actividad DetalleEstacionActivity con información completa
+                System.out.println("-------------estacionCercana2----------");
+                String estacionCercana = NomEstacionMasCercana(estacion);
+                System.out.println(estacionCercana);
                 Intent intent = new Intent(MainActivity.this, DetalleEstacionActivity.class);
+                intent.putExtra("estacionMasCercana", estacionCercana);
                 intent.putExtra("estacion", (Serializable) estacion);
                 startActivity(intent);
             }
@@ -532,21 +538,26 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         location2.setLatitude(lat2);
         location2.setLongitude(lon2);
 
-        System.out.println(location1.distanceTo(location2));
+        //System.out.println(location1.distanceTo(location2));
 
         return location1.distanceTo(location2);
     }
-    private void obtenerDistancias(){
-        for (Estacion est: estacionBicings) {
-            float distanciaAux = 0;
-            for (Estacion estacion: estacionBicings){
-                float distancia = calcularDistancia(est.getLon(),est.getLat(),
-                        estacion.getLon(),estacion.getLat());
-                if ( distancia < distanciaAux){
-                    distancia = distanciaAux;
-                    est.setRefEstacionCercana(estacion.getName());
+    private String NomEstacionMasCercana(Estacion est){
+        float distanciaAux = Float.MAX_VALUE; // Inicializa distanciaAux con un valor máximo
+        String nombreEstacionMasCercana = null;
+
+        for (Estacion estacion : estacionBicings) {
+            if (estacion.getStationId() != est.getStationId()){
+                float distancia = calcularDistancia(est.getLon(), est.getLat(), estacion.getLon(), estacion.getLat());
+                if (distancia < distanciaAux) {
+                    distanciaAux = distancia;
+                    nombreEstacionMasCercana = estacion.getName();
                 }
             }
+
         }
+
+        return nombreEstacionMasCercana;
     }
+
 }
