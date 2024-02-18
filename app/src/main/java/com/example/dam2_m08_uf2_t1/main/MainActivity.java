@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private MyLocationNewOverlay myLocationOverlay;
     private ArrayList<Estacion> estacionBicings;
     private ArrayList<Estacion> auxEstacion;
+    private double longitudActual;
+    private double latitudActual ;
+    private double zoomMapaActual;
     private MenuItem m1;
     private MenuItem m5;
     private boolean arrayLleno = false;
@@ -87,11 +90,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            obtenerEstatEstacions();
-            isMap = true;
-            ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
-        }
+
         // Inicializar osmdroid
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, getPreferences(Context.MODE_PRIVATE));
@@ -117,8 +116,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10000);
-        cargarMapa();
-
+        if (savedInstanceState == null) {
+            longitudActual = 2.1686;
+            latitudActual = 41.3874;
+            zoomMapaActual=18;
+            obtenerEstatEstacions();
+            isMap = true;
+            ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
+            cargarMapa();
+        }
         this.adaptador = new Adaptador(this, estacionBicings, this);//hay q cambiar cosas en el adaptador
         rv.setAdapter(adaptador);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -139,17 +145,25 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        latitudLongitudActual();
         outState.putBoolean("isMap", isMap);
         outState.putParcelableArrayList("listaEstaciones", estacionBicings);
         outState.putInt("mode", mode);
         outState.putBoolean("isFiltDistance", filtDistancia);
         outState.putFloat("distancia", maxDistance);
         outState.putParcelableArrayList("listauxEstaciones", auxEstacion);
+        outState.putDouble("latitudActual", latitudActual);
+        outState.putDouble("longitudActual", longitudActual);
+        outState.putDouble("zoomMapaActual", zoomMapaActual);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        latitudActual = savedInstanceState.getDouble("latitudActual");
+        longitudActual = savedInstanceState.getDouble("longitudActual");
+        zoomMapaActual = savedInstanceState.getDouble("zoomMapaActual");
+        cargarMapa();
         isMap = !savedInstanceState.getBoolean("isMap");
         auxEstacion = savedInstanceState.getParcelableArrayList("listauxEstaciones");
         estacionBicings = savedInstanceState.getParcelableArrayList("listaEstaciones");
@@ -168,10 +182,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private void cargarMapa() {
         this.mapa.setTileSource(TileSourceFactory.MAPNIK);
         this.mapController = (MapController) this.mapa.getController();
-        this.mapController.setZoom(18);
-        this.mapController.setCenter(new GeoPoint(41.3851, 2.1734));
+        this.mapController.setZoom(zoomMapaActual);
+        this.mapController.setCenter(new GeoPoint(latitudActual, longitudActual));
     }
+    private void latitudLongitudActual() {
+        GeoPoint centroMapa = (GeoPoint) mapa.getMapCenter();
 
+
+        this.zoomMapaActual = mapa.getZoomLevelDouble();
+        this.latitudActual = centroMapa.getLatitude();
+        this.longitudActual = centroMapa.getLongitude();
+    }
     private void iniciarMapaConUbicacionActual() {
         myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapa);
         myLocationOverlay.enableMyLocation();
@@ -543,6 +564,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         mapa.invalidate();
     }
     private void borrarMarcadoresMapa() {
+
+        latitudLongitudActual();
+
         mapa.getOverlays().clear();
         mapa.invalidate();
 

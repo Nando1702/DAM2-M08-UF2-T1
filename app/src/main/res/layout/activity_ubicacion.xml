@@ -12,11 +12,11 @@
         android:id="@+id/textIdEstacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
         android:text="Id de la estación: "
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Nombre de la estación -->
     <TextView
@@ -210,19 +210,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Cerrar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textRideCodeSupport" />
+        app:layout_constraintTop_toBottomOf="@+id/textestacionMasCercana" />
 
     <TextView
         android:id="@+id/textestacionMasCercana"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textRideCodeSupport" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
