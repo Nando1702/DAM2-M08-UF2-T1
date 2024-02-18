@@ -1,8 +1,13 @@
 package com.example.dam2_m08_uf2_t1.modelo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
-public class Estacion implements Serializable {
+public class Estacion implements Serializable, Parcelable {
     //Estat
     private int stationId;
     private int num_bikes_available;
@@ -292,5 +297,81 @@ public class Estacion implements Serializable {
                 ", rentalUris=" + rentalUris +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(stationId);
+        dest.writeInt(num_bikes_available);
+        dest.writeInt(bikes_mechanical);
+        dest.writeInt(bikes_ebike);
+        dest.writeInt(num_docks_available);
+        dest.writeInt(last_reported);
+        dest.writeByte((byte) (is_charging_station ? 1 : 0));
+        dest.writeString(status);
+        dest.writeInt(is_installed);
+        dest.writeInt(is_renting);
+        dest.writeInt(is_returning);
+        dest.writeInt(traffic);
+        dest.writeByte((byte) (isFavorite ? 1 : 0));
+        dest.writeString(name);
+        dest.writeString(physicalConfiguration);
+        dest.writeDouble(lat);
+        dest.writeDouble(lon);
+        dest.writeDouble(altitude);
+        dest.writeString(address);
+        dest.writeString(postCode);
+        dest.writeInt(capacity);
+        dest.writeByte((byte) (isChargingStation ? 1 : 0));
+        dest.writeDouble(nearbyDistance);
+        dest.writeByte((byte) (rideCodeSupport ? 1 : 0));
+        // Aquí puedes seguir escribiendo los demás campos en el Parcel
+    }
+
+    // Constructor utilizado para crear un objeto Estacion a partir de un Parcel
+    protected Estacion(Parcel in) {
+        stationId = in.readInt();
+        num_bikes_available = in.readInt();
+        bikes_mechanical = in.readInt();
+        bikes_ebike = in.readInt();
+        num_docks_available = in.readInt();
+        last_reported = in.readInt();
+        is_charging_station = in.readByte() != 0;
+        status = in.readString();
+        is_installed = in.readInt();
+        is_renting = in.readInt();
+        is_returning = in.readInt();
+        traffic = in.readInt();
+        isFavorite = in.readByte() != 0;
+        name = in.readString();
+        physicalConfiguration = in.readString();
+        lat = in.readDouble();
+        lon = in.readDouble();
+        altitude = in.readDouble();
+        address = in.readString();
+        postCode = in.readString();
+        capacity = in.readInt();
+        isChargingStation = in.readByte() != 0;
+        nearbyDistance = in.readDouble();
+        rideCodeSupport = in.readByte() != 0;
+        // Aquí puedes seguir leyendo los demás campos del Parcel
+    }
+
+    // Implementación del Creator utilizado para crear instancias de Estacion a partir del Parcel
+    public static final Creator<Estacion> CREATOR = new Creator<Estacion>() {
+        @Override
+        public Estacion createFromParcel(Parcel in) {
+            return new Estacion(in);
+        }
+
+        @Override
+        public Estacion[] newArray(int size) {
+            return new Estacion[size];
+        }
+    };
 // Otros métodos si es necesario
 }
