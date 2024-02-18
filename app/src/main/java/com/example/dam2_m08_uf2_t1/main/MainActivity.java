@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         cambiarListaMap();
         crearMarcas(auxEstacion);
         adaptador.setListaEstaciones(auxEstacion);
+
     }
 
     private void cargarMapa() {
@@ -225,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         inflater.inflate(R.menu.menu, menu);
         m1 = menu.findItem(R.id.item1);
         m5 = menu.findItem(R.id.item5);
+        m5.setChecked(filtDistancia);
         return true;
     }
     @Override
@@ -349,9 +351,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     maxDistance = Integer.parseInt(inputText);
                     // Aquí puedes utilizar el valor de maxDistance para filtrar las ubicaciones cercanas al usuario
                     borrarMarcadoresMapa();
-                    filtrarDistanciaAuxEstacion(auxEstacion);
-                    crearMarcas(auxEstacion);
-                    adaptador.setListaEstaciones(auxEstacion);
+
+                    if (filtDistancia) {
+
+                        if (auxEstacion == null) {
+                            auxEstacion = estacionBicings;
+                        }
+                        filtrarDistanciaAuxEstacion(estacionBicings);
+                        crearMarcas(auxEstacion);
+                        adaptador.setListaEstaciones(auxEstacion);
+                    }
+
+
                 }
             }
         });
@@ -524,6 +535,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     private void crearMarcas(ArrayList<Estacion> estacions) {
         mapa.getOverlays().clear();
+
         for (Estacion est : estacions) {
             addStationMarker(est);
         }
