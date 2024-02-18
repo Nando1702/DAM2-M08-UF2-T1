@@ -282,21 +282,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             m5.setChecked(filtDistancia);
             borrarMarcadoresMapa();
 
+            if (mode == MODE_MEZCLADO) {
+                auxEstacion = estacionBicings;
+            } else if (mode == MODE_FAVORITAS) {
+                auxEstacionFaboritos();
+            } else if (mode == MODE_ABIERTO) {
+                auxEstacionAbiertos();
+            }
             if (filtDistancia) {
-
-                if (auxEstacion == null) {
-                    auxEstacion = estacionBicings;
-                }
-                filtrarDistanciaAuxEstacion(estacionBicings);
-            } else {
-
-                if (mode == MODE_MEZCLADO) {
-                    auxEstacion = estacionBicings;
-                } else if (mode == MODE_FAVORITAS) {
-                    auxEstacionFaboritos();
-                } else if (mode == MODE_ABIERTO) {
-                    auxEstacionAbiertos();
-                }
+                filtrarDistanciaAuxEstacion(auxEstacion);
             }
             crearMarcas(auxEstacion);
             adaptador.setListaEstaciones(auxEstacion);
