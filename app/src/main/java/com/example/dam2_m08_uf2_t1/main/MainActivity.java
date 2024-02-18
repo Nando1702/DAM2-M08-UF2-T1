@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10000);
+
         if (savedInstanceState == null) {
             longitudActual = 2.1686;
             latitudActual = 41.3874;
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
             cargarMapa();
         }
+
         this.adaptador = new Adaptador(this, estacionBicings, this);//hay q cambiar cosas en el adaptador
         rv.setAdapter(adaptador);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -201,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         if (startPoint != null) {
             mapController.setCenter(startPoint);
+            
         }
     }
 
@@ -303,21 +306,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             m5.setChecked(filtDistancia);
             borrarMarcadoresMapa();
 
+            if (mode == MODE_MEZCLADO) {
+                auxEstacion = estacionBicings;
+            } else if (mode == MODE_FAVORITAS) {
+                auxEstacionFaboritos();
+            } else if (mode == MODE_ABIERTO) {
+                auxEstacionAbiertos();
+            }
             if (filtDistancia) {
-
-                if (auxEstacion == null) {
-                    auxEstacion = estacionBicings;
-                }
-                filtrarDistanciaAuxEstacion(estacionBicings);
-            } else {
-
-                if (mode == MODE_MEZCLADO) {
-                    auxEstacion = estacionBicings;
-                } else if (mode == MODE_FAVORITAS) {
-                    auxEstacionFaboritos();
-                } else if (mode == MODE_ABIERTO) {
-                    auxEstacionAbiertos();
-                }
+                filtrarDistanciaAuxEstacion(auxEstacion);
             }
             crearMarcas(auxEstacion);
             adaptador.setListaEstaciones(auxEstacion);
@@ -449,6 +446,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         adaptador.setListaEstaciones(auxEstacion);
         if (mode == MODE_FAVORITAS){
             auxEstacionFaboritos();
+            if (filtDistancia){
+                filtrarDistanciaAuxEstacion(auxEstacion);
+            }
             adaptador.setListaEstaciones(auxEstacion);
         }
         borrarMarcadoresMapa();
