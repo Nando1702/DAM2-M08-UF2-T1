@@ -9,23 +9,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dam2_m08_uf2_t1.modelo.Estacion;
-import com.example.dam2_m08_uf2_t1.modelo.EstacionInfo;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import okhttp3.OkHttpClient;
 
 public class ApiClientInfoEstacions {
 
