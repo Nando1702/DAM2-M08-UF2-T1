@@ -1,15 +1,18 @@
 package com.example.dam2_m08_uf2_t1.recyclerView;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dam2_m08_uf2_t1.R;
+import com.example.dam2_m08_uf2_t1.main.SharedPref;
 import com.example.dam2_m08_uf2_t1.modelo.Estacion;
 
 import java.util.List;
@@ -48,7 +51,29 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
         holder.textViewEstado.setText(estacion.getStatus());
         holder.textViewBicisEDisponibles.setText("Bicis electronicas disponibles: " + estacion.getBikes_ebike());
         holder.textViewBicisMDisponibles.setText("Bicis mecanicas disponibles: " + estacion.getBikes_mechanical());
+        holder.botonFav.setText(estacion.isFavorite() != true ? "✩" : "★");
 
+        if (estacion.isFavorite()) {
+            holder.textViewDireccion.setTextColor(Color.parseColor("#FFFF00")); // Reemplaza con el drawable para estación abierta
+        } else {
+
+            if (estacion.getStatus().equals("IN_SERVICE")) {
+                holder.textViewDireccion.setTextColor(Color.parseColor("#FFFF0000")); // Reemplaza con el drawable para estación abierta
+            } else {
+                holder.textViewDireccion.setTextColor(Color.parseColor("#FF000000")); // Reemplaza con el drawable para estación cerrada
+            }
+        }
+        // Agregar acción al botón
+        holder.botonFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Acción que deseas realizar al hacer clic en el botón
+                // Puedes acceder a la posición del elemento haciendo uso de "position"
+                if (rvi != null) {
+                    rvi.onButtonCLick(position);
+                }
+            }
+        });
     }
 
     @Override
@@ -72,6 +97,7 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
         TextView textViewEstado;
         TextView textViewBicisEDisponibles;
         TextView textViewBicisMDisponibles;
+        Button botonFav;
 
         public MyViewHolder(@NonNull View itemView, RecyclerViewInterface rvi) {
             super(itemView);
@@ -80,6 +106,7 @@ public class Adaptador extends RecyclerView.Adapter<Adaptador.MyViewHolder> {
             textViewEstado = itemView.findViewById(R.id.textViewEstado);
             textViewBicisMDisponibles = itemView.findViewById(R.id.textViewBicisMDisponibles);
             textViewBicisEDisponibles = itemView.findViewById(R.id.textViewBicisEDisponibles);
+            botonFav = itemView.findViewById(R.id.button2);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
