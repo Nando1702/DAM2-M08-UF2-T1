@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             obtenerEstatEstacions();
             isMap = true;
             ubicacionesFavoritasId = SharedPref.getFavoriteLocationsInt(getApplicationContext());
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         rv.setAdapter(adaptador);
         rv.setLayoutManager(new LinearLayoutManager(this));
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         outState.putInt("mode", mode);
         outState.putBoolean("isFiltDistance", filtDistancia);
         outState.putFloat("distancia", maxDistance);
-        outState.putParcelableArrayList("listauxEstaciones",auxEstacion);
+        outState.putParcelableArrayList("listauxEstaciones", auxEstacion);
     }
 
     @Override
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         isMap = !savedInstanceState.getBoolean("isMap");
         auxEstacion = savedInstanceState.getParcelableArrayList("listauxEstaciones");
         estacionBicings = savedInstanceState.getParcelableArrayList("listaEstaciones");
-        if (auxEstacion == null){
+        if (auxEstacion == null) {
             auxEstacion = estacionBicings;
         }
         mode = savedInstanceState.getInt("mode");
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         this.mapController.setZoom(18);
         this.mapController.setCenter(new GeoPoint(41.3851, 2.1734));
     }
+
     private void iniciarMapaConUbicacionActual() {
         myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapa);
         myLocationOverlay.enableMyLocation();
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             mapController.setCenter(startPoint);
         }
     }
+
     private void obtenerEstatEstacions() {
         ApiClientEstatEstacions.obtenerDatosEstatEstacions(getApplicationContext(), new ApiClientEstatEstacions.OnDataFetchedListener() {
             @Override
@@ -188,11 +191,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 obtenerinfoEstacions(estacionEstat);
                 //llamar a la api client info
             }
+
             @Override
             public void onError(VolleyError error) {
             }
         });
     }
+
     private void obtenerinfoEstacions(ArrayList<Estacion> estacionEstat) {
         ApiClientInfoEstacions.obtenerDatosinfoEstacions(getApplicationContext(), estacionEstat, new ApiClientInfoEstacions.OnDataFetchedListener() {
             @Override
@@ -204,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 auxEstacion = estacionBicings;
                 getfavoritesPref();
                 crearMarcas(estacionBicings);
-                // obtenerDistancias();
             }
 
             @Override
@@ -214,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -399,7 +404,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     @Override
     public void onItemCLick(int position) {
+        System.out.println("-------------estacionCercana1----------");
+        String estacionCercana = NomEstacionMasCercana(auxEstacion.get(position));
+        System.out.println(estacionCercana);
         Intent intent = new Intent(MainActivity.this, DetalleEstacionActivity.class);
+        intent.putExtra("estacionMasCercana", estacionCercana);
         intent.putExtra("estacion", (Serializable) auxEstacion.get(position));
         startActivity(intent);
     }
@@ -458,7 +467,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Abrir la actividad DetalleEstacionActivity con información completa
+                System.out.println("-------------estacionCercana2----------");
+                String estacionCercana = NomEstacionMasCercana(estacion);
+                System.out.println(estacionCercana);
                 Intent intent = new Intent(MainActivity.this, DetalleEstacionActivity.class);
+                intent.putExtra("estacionMasCercana", estacionCercana);
                 intent.putExtra("estacion", (Serializable) estacion);
                 startActivity(intent);
             }
@@ -551,22 +564,23 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         location2.setLatitude(lat2);
         location2.setLongitude(lon2);
 
-        System.out.println(location1.distanceTo(location2));
+        //System.out.println(location1.distanceTo(location2));
 
         return location1.distanceTo(location2);
     }
+    private String NomEstacionMasCercana(Estacion est) {
+        float distanciaAux = Float.MAX_VALUE; // Inicializa distanciaAux con un valor máximo
+        String nombreEstacionMasCercana = null;
 
-    private void obtenerDistancias() {
-        for (Estacion est : estacionBicings) {
-            float distanciaAux = 0;
-            for (Estacion estacion : estacionBicings) {
-                float distancia = calcularDistancia(est.getLon(), est.getLat(),
-                        estacion.getLon(), estacion.getLat());
+        for (Estacion estacion : estacionBicings) {
+            if (estacion.getStationId() != est.getStationId()) {
+                float distancia = calcularDistancia(est.getLon(), est.getLat(), estacion.getLon(), estacion.getLat());
                 if (distancia < distanciaAux) {
-                    distancia = distanciaAux;
-                    est.setRefEstacionCercana(estacion.getName());
+                    distanciaAux = distancia;
+                    nombreEstacionMasCercana = estacion.getName();
                 }
             }
         }
+        return nombreEstacionMasCercana;
     }
 }

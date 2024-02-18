@@ -19,7 +19,7 @@ public class DetalleEstacionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Estacion estacion = (Estacion) intent.getSerializableExtra("estacion");
         String estacionMasCercana = (String) intent.getSerializableExtra("estacionMasCercana");
-
+        System.out.println(estacionMasCercana);
         // Asignar valores a los TextViews
         TextView IdEstacion = findViewById(R.id.textIdEstacion);
         IdEstacion.setText("Id de laestación: " + estacion.getStationId());
