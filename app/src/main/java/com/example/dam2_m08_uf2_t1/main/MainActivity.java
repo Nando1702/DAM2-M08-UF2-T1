@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private MyLocationNewOverlay myLocationOverlay;
     private ArrayList<Estacion> estacionBicings;
     private ArrayList<Estacion> auxEstacion;
+    private ArrayList<Estacion> copiaEstacionBicings;
     private double longitudActual;
     private double latitudActual ;
     private double zoomMapaActual;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private MenuItem m5;
     private boolean arrayLleno = false;
     private Set<Integer> ubicacionesFavoritasId;
-    private float maxDistance = 1000000000;
+    private float maxDistance = 700;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 auxEstacion = estacionBicings;
                 getfavoritesPref();
                 crearMarcas(estacionBicings);
+                CopiaEstacionBicings();
             }
 
             @Override
@@ -284,30 +286,29 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 if (filtDistancia) {
                     filtrarDistanciaAuxEstacion(auxEstacion);
                 }
-                adaptador.setListaEstaciones(auxEstacion);
                 crearMarcas(auxEstacion);
                 adaptador.setListaEstaciones(auxEstacion);
             }
         } else if (num == R.id.item4) {
-
+            pasarAlArryAuxEstacion();//
             if (mode != MODE_MEZCLADO) {
-                auxEstacion = estacionBicings;
                 mode = MODE_MEZCLADO;
                 borrarMarcadoresMapa();
 
                 if (filtDistancia) {
                     filtrarDistanciaAuxEstacion(auxEstacion);
                 }
-                crearMarcas(estacionBicings);
-                adaptador.setListaEstaciones(estacionBicings);
+                crearMarcas(auxEstacion);
+                adaptador.setListaEstaciones(auxEstacion);
             }
         } else if (num == R.id.item5) {
+            pasarAlArryAuxEstacion();//
             filtDistancia = !filtDistancia;
             m5.setChecked(filtDistancia);
             borrarMarcadoresMapa();
 
             if (mode == MODE_MEZCLADO) {
-                auxEstacion = estacionBicings;
+                pasarAlArryAuxEstacion();//
             } else if (mode == MODE_FAVORITAS) {
                 auxEstacionFaboritos();
             } else if (mode == MODE_ABIERTO) {
@@ -316,16 +317,24 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             if (filtDistancia) {
                 filtrarDistanciaAuxEstacion(auxEstacion);
             }
+
+
             crearMarcas(auxEstacion);
             adaptador.setListaEstaciones(auxEstacion);
         } else if (num == R.id.item6) {
             mostrarDialogoDistanciaMaxima();
+
         } else {
             return super.onOptionsItemSelected(item);
         }
         return true;
     }
-
+    private void pasarAlArryAuxEstacion(){
+        auxEstacion.clear();
+        for (Estacion e :copiaEstacionBicings) {
+            auxEstacion.add(e);
+        }
+    }
     private void filtrarDistanciaAuxEstacion(ArrayList<Estacion> estacions) {
         ArrayList<Estacion> aux = new ArrayList<>();
         if (myLocationOverlay != null && myLocationOverlay.getMyLocation() != null) {
@@ -373,11 +382,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                     if (filtDistancia) {
 
                         if (auxEstacion == null) {
-                            auxEstacion = estacionBicings;
+                            pasarAlArryAuxEstacion();
                         }
 
+
+                        if (mode == MODE_MEZCLADO) {
+                            pasarAlArryAuxEstacion();//
+                        } else if (mode == MODE_FAVORITAS) {
+                            auxEstacionFaboritos();
+                        } else if (mode == MODE_ABIERTO) {
+                            auxEstacionAbiertos();
+                        }
                         borrarMarcadoresMapa();
-                        filtrarDistanciaAuxEstacion(estacionBicings);
+                        filtrarDistanciaAuxEstacion(auxEstacion);
                         crearMarcas(auxEstacion);
                         adaptador.setListaEstaciones(auxEstacion);
                     }
@@ -626,5 +643,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             }
         }
         return nombreEstacionMasCercana;
+    }
+    private void CopiaEstacionBicings(){
+        copiaEstacionBicings = new ArrayList<>(estacionBicings);
     }
 }
