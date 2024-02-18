@@ -449,6 +449,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         Intent intent = new Intent(MainActivity.this, DetalleEstacionActivity.class);
         intent.putExtra("estacion", auxEstacion.get(position));
+        intent.putExtra("estacion", auxEstacion.get(position).getRefEstacionCercana());
         startActivity(intent);
 
     }
